@@ -418,9 +418,10 @@ def detalle_agencia(request, pk):
             raise Http404
     elif user.groups.filter(name='comercial_mger').exists() or user.groups.filter(name='comercial_backup').exists():
         agencia = get_object_or_404(Agencia, pk=pk)
-    else:
-        return Http404
-    contactos = Contacto_Agencia.objects.filter(Agencia=agencia)
+    try:
+        contactos = Contacto_Agencia.objects.filter(Agencia=agencia)
+    except ObjectDoesNotExist:
+        pass
     return render(request, 'comercial/detalle_agencia.html', {'agencia': agencia, 'contactos': contactos,})
 
 @login_required
