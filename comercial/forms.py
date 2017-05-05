@@ -58,12 +58,12 @@ class Direccion_Fiscal_ClienteCForm(ModelForm):
 class Agencia_AutomotrizForm(ModelForm):
     class Meta:
         model = Agencia_Automotriz
-        fields = '__all__'
+        exclude = ['Cuenta_Bancaria']
 
 class Agencia_AutomotrizVForm(ModelForm):
     class Meta:
         model = Agencia_Automotriz
-        exclude = ['Atiende']
+        exclude = ['Atiende', 'Cuenta_Bancaria']
 
 class Contacto_AgenciaForm(ModelForm):
     class Meta:

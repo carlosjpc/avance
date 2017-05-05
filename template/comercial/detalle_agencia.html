@@ -16,6 +16,12 @@
     {% endif %}
     <h4>Atiende: {{ agencia.Atiende }}</h4>
     <a href="{% url 'actualizar_agencia' pk=agencia.pk %}">Editar agencia</a>
+    <hr></br>
+    {% for cuenta in cuentas %}
+      <p><a href="">{{ cuenta }}</a></p>
+    {% empty %}
+      <p>No se han agregado cuentas de deposito para esta agencia.</p>
+    {% endfor %}
   </div>
   <div class="col-sm-5 col-sm-offset-1">
     <h4>Contactos en Agencia:</h4>

@@ -80,36 +80,48 @@ class Contacto_C(models.Model):
 
 class Agencia_Automotriz(models.Model):
     acura = 'AC'
+    audi = 'AU'
     bmw = 'BM'
     chevrolet = 'CH'
     chrysler = 'CY'
     ford = 'FO'
+    honda = 'HO'
     hyundai = 'HY'
     kia = 'KI'
     infiniti = 'IN'
     isuzu = 'IZ'
+    lincoln = 'LN'
     mazda = 'MZ'
     mercedes = 'MB'
     nissan = 'NI'
-    volkswagen = 'VW'
     seat = 'SE'
+    volkswagen = 'VW'
     volvo = 'VO'
     brand_choices = (
         (acura, 'ACURA'),
+        (audi, 'AUDI'),
         (bmw, 'BMW'),
         (chevrolet, 'CHEVROLET'),
         (chrysler, 'CHRYSLER'),
         (ford, 'FORD'),
+        (honda, 'HONDA'),
         (hyundai, 'HYUNDAI'),
         (kia, 'KIA'),
         (infiniti, 'INFINITI'),
         (isuzu, 'ISUZU'),
+        (lincoln, 'LINCOLN'),
         (mazda, 'MAZDA'),
+        (mercedes, 'MERCEDES BENZ'),
+        (nissan, 'NISSAN'),
+        (seat, 'SEAT'),
+        (volkswagen, 'VOLKSWAGEN'),
+        (volvo, 'VOLVO'),
     )
     alden = 'al'
     camsa = 'ca'
     cever = 'ce'
     dalton = 'da'
+    picacho = 'pi'
     sonni = 'so'
     uribe = 'ur'
     independiente = 'in'
@@ -117,6 +129,7 @@ class Agencia_Automotriz(models.Model):
         (alden, 'ALDEN'),
         (camsa, 'CAMSA'),
         (cever, 'CEVER'),
+        (picacho, 'PICACHO'),
         (dalton, 'DALTON'),
         (sonni, 'SONNI'),
         (uribe, 'URIBE'),

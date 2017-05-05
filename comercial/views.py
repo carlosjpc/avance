@@ -27,6 +27,8 @@ from comercial.forms import (ClienteForm, Cliente_VForm, Contacto_CForm, Contact
 from central.models import (Documentacion_PMoral, Contrato, Anexo, Factura)
 from central.forms import (Documentacion_PMoral_Form)
 
+from admon.models import Cuenta_Bancaria
+
 # functions for decoraters to determine if a user can create / edit / delete or view:
 def comercial_check(user):
     if user:
@@ -426,7 +428,11 @@ def detalle_agencia(request, pk):
         contactos = Contacto_Agencia.objects.filter(Agencia=agencia)
     except ObjectDoesNotExist:
         pass
-    return render(request, 'comercial/detalle_agencia.html', {'agencia': agencia, 'contactos': contactos,})
+    try:
+        cuentas = Cuenta_Bancaria.objects.filter(Agencia=agencia)
+    except ObjectDoesNotExist:
+        pass
+    return render(request, 'comercial/detalle_agencia.html', {'agencia': agencia, 'contactos': contactos, 'cuentas': cuentas,})
 
 @login_required
 def nuevo_contacto_agencia(request, pk):
