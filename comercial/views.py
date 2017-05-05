@@ -373,8 +373,12 @@ def nueva_agencia(request):
 
 @login_required
 def lista_agencias(request):
-    lista_agencias = Agencia_Automotriz.objects.all()
-    paginator = Paginator(lista_agencias, 40)
+    user = request.user
+    if user.groups.filter(name='comercial_vendedor').exists():
+        lista_agencias = Agencia_Automotriz.objects.filter(Atiende=user)
+    else:
+        lista_agencias = Agencia_Automotriz.objects.all()
+    paginator = Paginator(lista_agencias, 20)
     page = request.GET.get('page')
     try:
         agencias = paginator.page(page)

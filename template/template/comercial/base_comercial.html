@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load comercial_tags %}
+
+{% block Mobile_Menu %}
+<img>
+<ul class="toggle">
+  <li><a href=""></a>Status</li>
+  <li><a href="{% url 'lista_clientes' vendedor_pk='000' status='AL' tipo='S' %}">Nuevo Posible Anexo</a></li>
+  <li><a href="{% url 'nuevo_prospecto' %}">Nuevo Prospecto</a></li>
+  <li><a href="{% url 'nueva_agencia' %}">Nueva Agencia</a></li>
+</ul>
+{% endblock %}
+
+{% block Desktop_Menu %}
+<ul>
+  <li>
+    <p id="cliente_op">Clientes</p>
+    <img>
+    <ul id="cliente_toggle" class="dp-n">
+      {% if request.user|has_group:"comercial_vendedor" or request.user|has_group:"comercial_mger" %}
+        <li><a href="{% url 'nuevo_prospecto' %}">Nuevo Cliente</a></li>
+        <li><a href="{% url 'nuevo_contacto' pk='000' %}">Nuevo Contacto</a></li>
+      {% endif %}
+      <li><a href="{% url 'lista_clientes' vendedor_pk='000' status='AL' tipo='L' %}">Lista Clientes</a></li>
+    </ul>
+  </li>
+  <li>
+    <p id="caso_op">Casos</p>
+    <img>
+    <ul id="caso_toggle" class="dp-n">
+      {% if request.user|has_group:"comercial_vendedor" or request.user|has_group:"comercial_mger" %}
+        <li><a href="{% url 'lista_clientes' vendedor_pk='000' status='AL' tipo='S' %}">Nuevo Caso</a></li>
+      {% endif %}
+    </ul>
+  </li>
+  <li>
+    <p id="agencia_op">Agencia</p>
+    <img>
+    <ul id="agencia_toggle" class="dp-n">
+      {% if request.user|has_group:"comercial_vendedor" or request.user|has_group:"comercial_mger" %}
+        <li><a href="{% url 'nueva_agencia' %}">Nueva Agencia</a></li>
+      {% endif %}
+      <li><a href="{% url 'lista_agencias' %}">Lista Agencias</a></li>
+    </ul>
+  </li>
+</ul>
+{% endblock %}
+
+{% block BaseJavascript %}
+<script>
+$(document).ready(function(){
+    $("#cliente_op").click(function(){
+        $("#cliente_toggle").slideToggle();
+    });
+    $("#caso_op").click(function(){
+        $("#caso_toggle").slideToggle();
+    });
+    $("#agencia_op").click(function(){
+        $("#agencia_toggle").slideToggle();
+    });
+});
+</script>
+{% endblock %}
