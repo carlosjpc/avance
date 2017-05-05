@@ -476,6 +476,26 @@ def editar_contacto_agencia(request, pk):
     contactoform = Contacto_Agencia_IniForm(instance=contacto)
     return render(request, 'comercial/form.html', {'form': contactoform,})
 
+@login_required
+def lista_casos_vendedor_agencia(request, pk):
+    user = request.user
+    if user.groups.filter(name='comercial_vendedor').exists():
+        contacto = Contacto_Agencia.objects.get(pk=pk, Atiende=user)
+    elif user.groups.filter(name='comercial_mger').exists():
+        contacto = get_object_or_404(Contacto_Agencia, pk=pk)
+    else:
+        return Http404
+    lista_casos = Caso.objects.filter(Vendedor_Agencia=contacto)
+    paginator = Paginator(lista_casos, 10)
+    page = request.GET.get('page')
+    try:
+        casos = paginator.page(page)
+    except PageNotAnInteger:
+        casos = paginator.page(1)
+    except EmptyPage:
+        casos = paginator.page(paginator.num_pages)
+    return render(request, 'comercial/lista_casos_vendedor.html', {'contacto': contacto, 'casos': casos,})
+
 #------------------------------------ Views Clientes ------------------------------------#
 
 #Crea un objeto Cliente y un objeto Caso

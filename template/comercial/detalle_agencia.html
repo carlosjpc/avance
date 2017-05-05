@@ -19,14 +19,20 @@
     <hr></br>
     {% for cuenta in cuentas %}
       <p><a href="">{{ cuenta }}</a></p>
-    {% empty %}
-      <p>No se han agregado cuentas de deposito para esta agencia.</p>
     {% endfor %}
+    <p><a href="">Agregar Cuenta Bancaria</a></p>
   </div>
   <div class="col-sm-5 col-sm-offset-1">
     <h4>Contactos en Agencia:</h4>
     {% for contacto in contactos %}
-      <p>{{ contacto }} / {{ contacto.get_Rol_display }}</p>
+      <p>
+        {% if contacto.get_Rol_display == 'Vendedor' %}
+          <a href="{% url 'lista_casos_vendedor_agencia' pk=contacto.pk %}">{{ contacto }}</a> 
+        {% else %}
+          {{ contacto }}
+        {% endif %}
+        / {{ contacto.get_Rol_display }}
+      </p>
       <p>Email: <a href="mailto:{{ contacto.Email }}">{{ contacto.Email }}</a></p>
       {% if contacto.Celular %}
         <p>Celular: {{ contacto.Celular }}</p>

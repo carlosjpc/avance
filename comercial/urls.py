@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^detalle_agencia/(?P<pk>[0-9]+)/$', views.detalle_agencia, name="detalle_agencia"),
     url(r'^nuevo_contacto_agencia/(?P<pk>[0-9]+)/$', views.nuevo_contacto_agencia, name="nuevo_contacto_agencia"),
     url(r'^editar_contacto_agencia/(?P<pk>[0-9]+)/$', views.editar_contacto_agencia, name="editar_contacto_agencia"),
+    url(r'^lista_casos_vendedor_agencia/(?P<pk>[0-9]+)/$', views.lista_casos_vendedor_agencia, name="lista_casos_vendedor_agencia"),
     #Caso urls
     url(r'^nuevo_caso/(?P<pk_cliente>[0-9]+)/(?P<pk_atiende>[0-9]+)/$', views.nuevo_caso , name="nuevo_caso"),
     url(r'^actualizar_caso/(?P<pk>[0-9]+)/$', views.actualizar_caso, name="actualizar_caso"),

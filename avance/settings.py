@@ -63,7 +63,7 @@ ROOT_URLCONF = 'avance.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/Users/carlospceballos/dropbox/django/projectos/avance/template'],
+        'DIRS': ['/Users/carlospceballos/dropbox/django/gitRepositories/avance/template'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

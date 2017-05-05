@@ -1,0 +1,27 @@
+{% extends "comercial/base_comercial.html" %}
+
+{% block AreaTrabajo %}
+<div class="row">
+  <div class="col-sm-7 col-sm-offset-2">
+    <h2>Lista de casos a traves del vendedor: {{ contacto }}</h2></br>
+    {% for caso in casos %}
+      <p><a href="{% url 'detalle_caso' pk=caso.pk %}">{{ caso }}</a></p>
+    {% endfor %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if casos.has_previous %}
+                <a href="?page={{ casos.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ casos.number }} of {{ casos.paginator.num_pages }}.
+            </span>
+
+            {% if casos.has_next %}
+                <a href="?page={{ casos.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
+  </div>
+</div>
+{% endblock %}
