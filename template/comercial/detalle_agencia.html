@@ -20,14 +20,14 @@
     {% for cuenta in cuentas %}
       <p><a href="">{{ cuenta }}</a></p>
     {% endfor %}
-    <p><a href="">Agregar Cuenta Bancaria</a></p>
+    <p><a href="{% url 'nueva_cuenta_bancaria_agencia' pk=agencia.pk %}">Agregar Cuenta Bancaria</a></p>
   </div>
   <div class="col-sm-5 col-sm-offset-1">
     <h4>Contactos en Agencia:</h4>
     {% for contacto in contactos %}
       <p>
         {% if contacto.get_Rol_display == 'Vendedor' %}
-          <a href="{% url 'lista_casos_vendedor_agencia' pk=contacto.pk %}">{{ contacto }}</a> 
+          <a href="{% url 'lista_casos_vendedor_agencia' pk=contacto.pk %}">{{ contacto }}</a>
         {% else %}
           {{ contacto }}
         {% endif %}

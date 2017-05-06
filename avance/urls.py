@@ -27,5 +27,6 @@ urlpatterns = [
     url(r'^redirect/$', views.login_redirect, name='redirect'),
     url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
     url(r'^central/', include("central.urls")),
+    url(r'^admon/', include("admon.urls")),
     url(r'^comercial/', include("comercial.urls")),
 ]

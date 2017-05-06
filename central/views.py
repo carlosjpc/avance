@@ -3,12 +3,8 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.forms.formsets import formset_factory
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
 from django.urls import reverse_lazy
 from django.db.models import Q
 from datetime import datetime, timedelta
