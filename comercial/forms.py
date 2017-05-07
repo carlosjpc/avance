@@ -3,7 +3,7 @@ from django.forms import ModelForm
 from django.contrib.auth.models import User
 
 from comercial.models import (Cliente, Contacto_C, Agencia_Automotriz, Contacto_Agencia, Caso,
-                            Direccion_Fiscal_Cliente, Interaccion, Anotacion)
+                            Direccion_Fiscal_Cliente, Interaccion, Anotacion, Cita)
 
 def has_group(user, group_name):
     """
@@ -191,3 +191,34 @@ class AnotacionForm(ModelForm):
     class Meta:
         model = Anotacion
         exclude = ['al_Caso', 'Hecha_por', 'Hist_Etapa']
+
+class CitaClienteForm(ModelForm):
+    class Meta:
+        model = Cita
+        exclude = ['Agencia', 'Atiende']
+        widgets = {
+            'Hora': forms.TimeInput(format='%H:%M'),
+        }
+
+    def __init__(self,*args,**kwargs):
+        user = kwargs.pop("user")
+        super(CitaClienteForm, self).__init__(*args, **kwargs)
+        self.fields['Cliente'].queryset = Cliente.objects.filter(Atiende=user)
+
+class CitaAgenciaForm(forms.Form):
+    dias = (
+            ("0", "lunes"),
+            ("1", "martes"),
+            ("2", "miercoles"),
+            ("3", "jueves"),
+            ("4", "viernes"),
+            ("5", "sabado"),
+            )
+    Agencia = forms.ModelChoiceField(queryset=Agencia_Automotriz.objects.none())
+    Hora = forms.TimeField(widget=forms.TimeInput(format='%H:%M'))
+    Todos_los = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=dias)
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user")
+        super(CitaAgenciaForm, self).__init__(*args, **kwargs)
+        self.fields['Agencia'].queryset = Agencia_Automotriz.objects.filter(Atiende=user)

@@ -1,0 +1,22 @@
+{% extends "comercial/base_comercial.html" %}
+{% load crispy_forms_tags %}
+
+{% block AreaTrabajo %}
+<div class="col-sm-6 col-sm-offset-2">
+</br><h3> {{ title }} </h3></br>
+  <form method='POST' action=''>
+    {% csrf_token %}
+      {{ form|crispy }}
+      </br><input type='submit' value='Guardar'>
+    <p></p></br></br>
+  </form>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+  $(document).ready(function() {
+      $('.dateinput').datepicker({ format: "yyyy/mm/dd" });
+  });
+</script>
+{% endblock %}

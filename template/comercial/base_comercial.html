@@ -14,6 +14,17 @@
 {% block Desktop_Menu %}
 <ul>
   <li>
+    <p id="citas_op">Citas</p>
+    <img>
+    <ul id="citas_toggle" class="dp-n">
+      {% if request.user|has_group:"comercial_vendedor" or request.user|has_group:"comercial_mger" %}
+        <li><a href="{% url 'nueva_cita_cliente' %}">Agendar Cita con Cliente</a></li>
+        <li><a href="{% url 'nueva_cita_agencia' %}">Agendar Visita a Agencia</a></li>
+      {% endif %}
+      <li><a href="">Calendario</a></li>
+    </ul>
+  </li>
+  <li>
     <p id="cliente_op">Clientes</p>
     <img>
     <ul id="cliente_toggle" class="dp-n">
@@ -49,15 +60,18 @@
 {% block BaseJavascript %}
 <script>
 $(document).ready(function(){
-    $("#cliente_op").click(function(){
-        $("#cliente_toggle").slideToggle();
-    });
-    $("#caso_op").click(function(){
-        $("#caso_toggle").slideToggle();
-    });
-    $("#agencia_op").click(function(){
-        $("#agencia_toggle").slideToggle();
-    });
+  $("#citas_op").click(function(){
+      $("#citas_toggle").slideToggle();
+  });
+  $("#cliente_op").click(function(){
+      $("#cliente_toggle").slideToggle();
+  });
+  $("#caso_op").click(function(){
+      $("#caso_toggle").slideToggle();
+  });
+  $("#agencia_op").click(function(){
+      $("#agencia_toggle").slideToggle();
+  });
 });
 </script>
 {% endblock %}

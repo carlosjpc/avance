@@ -16,13 +16,13 @@ from datetime import datetime, timedelta
 
 #app imports
 from comercial.models import (Cliente, Contacto_C, Direccion_Fiscal_Cliente, Agencia_Automotriz, Contacto_Agencia,
-                            Caso, Interaccion, Anotacion, Historial_Etapa)
+                            Caso, Interaccion, Anotacion, Historial_Etapa, Cita)
 from comercial.forms import (ClienteForm, Cliente_VForm, Contacto_CForm, Contacto_CCForm, Contacto_CCAForm,
                             Caso_VForm, Caso_CVForm, Caso_IniForm, Caso_StatusForm,
                             Agencia_AutomotrizForm, Agencia_AutomotrizVForm, Contacto_AgenciaForm,
                             Contacto_AgenciaVForm, Contacto_Agencia_IniForm, Direccion_Fiscal_ClienteForm,
                             Contacto_Agencia_AForm, Direccion_Fiscal_ClienteCForm, InteraccionForm,
-                            AnotacionForm)
+                            AnotacionForm, CitaClienteForm, CitaAgenciaForm)
 
 from central.models import (Documentacion_PMoral, Contrato, Anexo, Factura)
 from central.forms import (Documentacion_PMoral_Form)
@@ -46,8 +46,8 @@ def manager_check(user):
     return False
 
 def vendedor_check(user):
-    if user:
-        return user.groups.filter(name='comercial_vendedor').count() == 1
+    if user.groups.filter(name='comercial_vendedor').exists() or user.groups.filter(name='comercial_mger').exists():
+        return True
     return False
 
 # Create your views here.
@@ -146,6 +146,49 @@ def ctrl_panel_backup(request):
                 'lista_casos_eap': casos_eap, 'lista_casos_apr': casos_apr,
                 'lista_casos_fon': casos_fon, 'lista_casos_crd': casos_crd,}
     return render(request, 'comercial/ctrl_panel_backup.html', context)
+
+#------------------------------------ Views Citas ------------------------------------#
+@login_required
+@user_passes_test(vendedor_check)
+def nueva_cita_cliente(request):
+    if request.method == 'POST':
+        citaform = CitaClienteForm(request.POST, user = request.user)
+        if citaform.is_valid():
+            nueva_cita = citaform.save(commit=False)
+            nueva_cita.Atiende = request.user
+            nueva_cita.save()
+            url = reverse('redirect')
+            return HttpResponseRedirect(url)
+        else:
+            return render(request, 'comercial/form_wdate.html', {'form': citaform})
+    citaform = CitaClienteForm(instance=Cita(), user = request.user)
+    return render(request, 'comercial/form_wdate.html', {'form': citaform, 'title': "Nueva Cita:",})
+
+from comercial.utils import next_weekday
+
+@login_required
+@user_passes_test(vendedor_check)
+def nueva_cita_agencia(request):
+    if request.method == 'POST':
+        citaform = CitaAgenciaForm(request.POST, user=request.user)
+        if citaform.is_valid():
+            agencia = citaform.cleaned_data.get('Agencia')
+            dias = citaform.cleaned_data.get('Todos_los')
+            hora = citaform.cleaned_data.get('Hora')
+            today = datetime.now()
+            for dia in dias:
+                next_dia = next_weekday(today, dia)
+                for x in range(0, 51):
+                    siguiente_semana = timedelta(weeks = x)
+                    fecha = next_dia + siguiente_semana
+                    nueva_cita = Cita(Agencia=agencia, Atiende=request.user, Hora=hora, Fecha=fecha, Descripcion=agencia.get_Marca_display())
+                    nueva_cita.save()
+            url = reverse('comercial/calendario')
+            return HttpResponseRedirect(url)
+        else:
+            return render(request, 'comercial/form_wdate.html', {'form': citaform})
+    citaform = CitaAgenciaForm(user=request.user)
+    return render(request, 'comercial/form_wdate.html', {'form': citaform})
 
 #------------------------------------ Views Casos ------------------------------------#
 
@@ -784,21 +827,13 @@ def actualizar_documentacion_caso(request, pk):
     docuform = Documentacion_PMoral_Form(instance=documentacion)
     return render(request, 'comercial/docuform.html', {'docuform': docuform,})
 
-# Class Based Views
+#calendar
+from django.utils.safestring import mark_safe
+from comercial.utils import AgendaCalendar
 
-#PDF
-from django.template.loader import get_template
-from django.template import RequestContext
-from django.conf import settings
-
-#from weasyprint import HTML, CSS
-
-@login_required
-def get_report(request):
-    html_template = get_template('templates/report.html')
-    user = request.user
-    rendered_html = html_template.render(RequestContext(request, {'you': user})).encode(encoding="UTF-8")
-    pdf_file = HTML(string=rendered_html).write_pdf(stylesheets=[CSS(settings.STATIC_ROOT +  'css/report.css')])
-    http_response = HttpResponse(pdf_file, content_type='application/pdf')
-    http_response['Content-Disposition'] = 'filename="report.pdf"'
-    return response
+def calendar(request):
+    today = datetime.date()
+    mis_citas = Cita.objects.order_by('my_date').filter(
+    my_date__year=today.year, my_date__month=today.month)
+    cal = AgendaCalendar(mis_citas).formatmonth(year, month)
+    return render(request, 'my_template.html', {'calendar': mark_safe(cal),})

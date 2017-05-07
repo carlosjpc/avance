@@ -258,3 +258,20 @@ class Anotacion(models.Model):
 
     def __str__(self):
         return self.al_Caso.Cliente.Nombre_Empresa + ' | ' + self.Requerimiento
+
+class Cita(models.Model):
+    Agencia = models.ForeignKey(Agencia_Automotriz, blank=True, null=True)
+    Cliente = models.ForeignKey(Cliente, blank=True, null=True)
+    Fecha = models.DateField()
+    Hora = models.TimeField()
+    Descripcion = models.CharField(max_length=140, blank=True)
+    Atiende = models.ForeignKey(User, blank=True)
+
+    class Meta:
+        unique_together = ('Fecha', 'Atiende',)
+
+    def __str__(self):
+        if self.Cliente:
+            return self.Cliente.Nombre_Empresa + ' | ' + self.Descripcion
+        elif self.Agencia:
+            return self.Agencia.get_Marca_display() + self.Agencia.Colonia + ' | ' + self.Descripcion
