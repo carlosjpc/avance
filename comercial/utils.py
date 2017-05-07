@@ -21,13 +21,13 @@ class AgendaCalendar(HTMLCalendar):
             cssclass = self.cssclasses[weekday]
             if date.today() == date(self.year, self.month, day):
                 cssclass += ' today'
-            if day in self.workouts:
+            if day in self.citas:
                 cssclass += ' filled'
                 body = ['<ul>']
-                for workout in self.workouts[day]:
+                for cita in self.citas[day]:
                     body.append('<li>')
-                    body.append('<a href="%s">' % citas.get_absolute_url())
-                    body.append(esc(citas.title))
+                    body.append('<a href="%s">' % cita.get_absolute_url())
+                    body.append(esc(cita))
                     body.append('</a></li>')
                 body.append('</ul>')
                 return self.day_cell(cssclass, '%d %s' % (day, ''.join(body)))
@@ -39,7 +39,7 @@ class AgendaCalendar(HTMLCalendar):
         return super(AgendaCalendar, self).formatmonth(year, month)
 
     def group_by_day(self, citas):
-        field = lambda citas: citas.performed_at.day
+        field = lambda citas: citas.Fecha.day
         return dict(
             [(day, list(items)) for day, items in groupby(citas, field)]
         )

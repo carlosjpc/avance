@@ -270,6 +270,9 @@ class Cita(models.Model):
     class Meta:
         unique_together = ('Fecha', 'Atiende',)
 
+    def get_absolute_url(self):
+        return '/comercial/detalle_cita/%d/' % self.pk
+
     def __str__(self):
         if self.Cliente:
             return self.Cliente.Nombre_Empresa + ' | ' + self.Descripcion

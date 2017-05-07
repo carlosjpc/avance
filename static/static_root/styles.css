@@ -96,3 +96,16 @@ ul {
     border: 2px solid yellow;
     border-left: 7px solid yellow;
 }
+/* calendar */
+.weekday {
+  height: 85px;
+  width: 85px;
+  background-color: #d7dbe2;
+  border: 2px solid white;
+}
+.today {
+  background-color: #e2a295;
+}
+.filled {
+  background-color: #efeea7;
+}

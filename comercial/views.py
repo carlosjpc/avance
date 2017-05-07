@@ -241,7 +241,7 @@ def nuevo_caso(request, pk_cliente, pk_atiende):
         caso_form = Caso_VForm(user=atiende)
     if pk_cliente == '000' and pk_atiende == '000' and user.groups.filter(name='comercial_mger').exists():
         caso_form = Caso_Form ()
-    return render(request, 'comercial/nuevo.html', {'form': caso_form,})
+    return render(request, 'comercial/form_wdate.html', {'form': caso_form,})
 
 @login_required
 @user_passes_test(comercial_check)
@@ -689,7 +689,7 @@ def nuevo_contacto(request, pk):
                 nuevo_contacto.Atiende = cliente.Atiende
                 nuevo_contacto.Cliente = cliente
             else:
-                return render(request, 'comercial/nuevo.html', {'form': contactoform,})
+                return render(request, 'comercial/form_wdate.html', {'form': contactoform,})
         else:
             if user.groups.filter(name='comercial_vendedor').exists():
                 contactoform = Contacto_CCForm(request.POST, user=user)
@@ -697,13 +697,13 @@ def nuevo_contacto(request, pk):
                     nuevo_contacto = contactoform.save(commit=False)
                     nuevo_contacto.Atiende = user
                 else:
-                    return render(request, 'comercial/nuevo.html', {'form': contactoform,})
+                    return render(request, 'comercial/form_wdate.html', {'form': contactoform,})
             else:
                 contactoform = Contacto_CForm(request.POST)
                 if contactoform.is_valid():
                     nuevo_contacto = contactoform.save(commit=False)
                 else:
-                    return render(request, 'comercial/nuevo.html', {'form': contactoform,})
+                    return render(request, 'comercial/form_wdate.html', {'form': contactoform,})
             cliente = nuevo_contacto.Cliente
         nuevo_contacto.save()
         url = reverse('detalle_cliente', kwargs={'pk': cliente.pk})
@@ -717,7 +717,7 @@ def nuevo_contacto(request, pk):
             contactoform = Contacto_CCForm(user=user)
         else:
             contactoform = Contacto_CForm()
-    return render(request, 'comercial/nuevo.html', {'form': contactoform,})
+    return render(request, 'comercial/form_wdate.html', {'form': contactoform,})
 
 @login_required
 @user_passes_test(comercial_check)
@@ -763,14 +763,14 @@ def nueva_direccion(request, pk):
                 nueva_direccion.Cliente = cliente
                 nueva_direccion.save()
             else:
-                return render(request, 'comercial/nuevo.html', {'form': direccionform,})
+                return render(request, 'comercial/form_wdate.html', {'form': direccionform,})
         else:
             form = Direccion_Fiscal_ClienteForm(request.POST)
             if direccionform.is_valid():
                 nueva_direccion = direccionform.save()
             else:
-                return render(request, 'comercial/nuevo.html', {'form': direccionform,})
-    return render(request, 'comercial/nuevo.html', {'form': direccionform,})
+                return render(request, 'comercial/form_wdate.html', {'form': direccionform,})
+    return render(request, 'comercial/form_wdate.html', {'form': direccionform,})
 
 @login_required
 def editar_direccion(request, pk):
@@ -827,13 +827,14 @@ def actualizar_documentacion_caso(request, pk):
     docuform = Documentacion_PMoral_Form(instance=documentacion)
     return render(request, 'comercial/docuform.html', {'docuform': docuform,})
 
-#calendar
+#------------------------------------ Views Calendario ------------------------------------#
+
 from django.utils.safestring import mark_safe
 from comercial.utils import AgendaCalendar
 
 def calendar(request):
-    today = datetime.date()
-    mis_citas = Cita.objects.order_by('my_date').filter(
-    my_date__year=today.year, my_date__month=today.month)
-    cal = AgendaCalendar(mis_citas).formatmonth(year, month)
-    return render(request, 'my_template.html', {'calendar': mark_safe(cal),})
+    today = datetime.now()
+    mis_citas = Cita.objects.filter(Atiende=request.user, Fecha__year=today.year,
+                                    Fecha__month=today.month).order_by('Fecha')
+    cal = AgendaCalendar(mis_citas).formatmonth(today.year, today.month)
+    return render(request, 'comercial/calendar.html', {'calendar': mark_safe(cal),})

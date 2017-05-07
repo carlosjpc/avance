@@ -96,3 +96,19 @@ ul {
     border: 2px solid yellow;
     border-left: 7px solid yellow;
 }
+/* calendar */
+.mon, .tue, .wed, .thu, .fri, .sat, .sun {
+  height: 85px;
+  width: 85px;
+  background-color: #d7dbe2;
+  border: 2px solid white;
+}
+.sun {
+  background-color: #deebf7;
+}
+.today {
+  background-color: #e2a295;
+}
+.filled {
+  background-color: #efeea7;
+}

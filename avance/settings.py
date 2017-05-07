@@ -128,10 +128,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = '/Users/carlospceballos/dropbox/django/projectos/avance/static/static_root/'
+STATIC_ROOT = '/Users/carlospceballos/dropbox/django/gitRepositories/avance/static/static_root/'
 
 STATICFILES_DIRS = (
-    '/Users/carlospceballos/dropbox/django/projectos/avance/static/static_dirs/',
+    '/Users/carlospceballos/dropbox/django/gitRepositories/avance/static/static_dirs/',
 )
 
 MEDIA_URL = '/media/'
