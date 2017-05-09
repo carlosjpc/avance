@@ -106,9 +106,12 @@ ul {
 .sun {
   background-color: #deebf7;
 }
+.filled {
+  background-color: #efeea7;
+}
 .today {
   background-color: #e2a295;
 }
-.filled {
-  background-color: #efeea7;
+.cita {
+  font-size:10px;
 }

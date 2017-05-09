@@ -1,9 +1,21 @@
 {% extends "comercial/base_comercial.html" %}
-{% load crispy_forms_tags %}
 
 {% block AreaTrabajo %}
 </br></br>
 <div class="col-sm-11 col-sm-offset-1">
-  {{ calendar }}
+  {{ calendar }}</br></br>
+  <div class="row">
+    <div class="col-sm-3 col-sm-offset-2">
+      <p class="txt-c">
+        <a href="{% url 'calendario_t' ano=p_month.year mes=p_month.month %}"><<< {{ previous_month }}</a>
+      </p>
+    </div>
+    <div class="col-sm-3">
+      <p class="txt-c">
+        <a href="{% url 'calendario_t' ano=n_month.year mes=n_month.month %}">{{ next_month }} >>></a>
+      </p>
+    </div>
+  </div>
+  </br></br>
 </div>
 {% endblock %}

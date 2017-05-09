@@ -12,7 +12,8 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.urls import reverse_lazy
 from django.db.models import Q
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
+from dateutil.relativedelta import relativedelta
 
 #app imports
 from comercial.models import (Cliente, Contacto_C, Direccion_Fiscal_Cliente, Agencia_Automotriz, Contacto_Agencia,
@@ -189,6 +190,16 @@ def nueva_cita_agencia(request):
             return render(request, 'comercial/form_wdate.html', {'form': citaform})
     citaform = CitaAgenciaForm(user=request.user)
     return render(request, 'comercial/form_wdate.html', {'form': citaform})
+
+@login_required
+@user_passes_test(vendedor_check)
+def detalle_cita(request, pk):
+    user = request.user
+    if user.groups.filter(name='comercial_vendedor').exists():
+        cita = Cita.objects.get(pk=pk, Atiende=user)
+    else:
+        cita = Cita.objects.get(pk=pk)
+    return render(request, 'comercial/detalle_cita.html', {'cita': cita})
 
 #------------------------------------ Views Casos ------------------------------------#
 
@@ -832,9 +843,29 @@ def actualizar_documentacion_caso(request, pk):
 from django.utils.safestring import mark_safe
 from comercial.utils import AgendaCalendar
 
-def calendar(request):
-    today = datetime.now()
-    mis_citas = Cita.objects.filter(Atiende=request.user, Fecha__year=today.year,
-                                    Fecha__month=today.month).order_by('Fecha')
-    cal = AgendaCalendar(mis_citas).formatmonth(today.year, today.month)
-    return render(request, 'comercial/calendar.html', {'calendar': mark_safe(cal),})
+def calendario(request):
+    hoy = date.today()
+    mis_citas = Cita.objects.filter(Atiende=request.user, Fecha__year=hoy.year,
+                                    Fecha__month=hoy.month).order_by('Fecha')
+    cal = AgendaCalendar(mis_citas).formatmonth(hoy.year, hoy.month)
+    next_month = hoy + relativedelta(months=+1)
+    previous_month = hoy + relativedelta(months=-1)
+    context = {'calendar': mark_safe(cal), 'next_month': next_month.strftime("%B"),
+               'previous_month': previous_month.strftime("%B"),
+               'n_month': next_month, 'p_month': previous_month,}
+    return render(request, 'comercial/calendar.html', context)
+
+def calendario_t(request, ano, mes):
+    ano = int(ano)
+    mes = int(mes)
+    fecha = date.today()
+    fecha = fecha.replace(year = ano, month = mes)
+    mis_citas = Cita.objects.filter(Atiende=request.user, Fecha__year=fecha.year,
+                                    Fecha__month=fecha.month).order_by('Fecha')
+    cal = AgendaCalendar(mis_citas).formatmonth(fecha.year, fecha.month)
+    next_month = fecha + relativedelta(months=+1)
+    previous_month = fecha + relativedelta(months=-1)
+    context = {'calendar': mark_safe(cal), 'next_month': next_month.strftime("%B"),
+               'previous_month': previous_month.strftime("%B"),
+               'n_month': next_month, 'p_month': previous_month,}
+    return render(request, 'comercial/calendar.html', context)

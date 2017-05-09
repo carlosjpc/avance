@@ -25,7 +25,7 @@ class AgendaCalendar(HTMLCalendar):
                 cssclass += ' filled'
                 body = ['<ul>']
                 for cita in self.citas[day]:
-                    body.append('<li>')
+                    body.append('<li class="cita">')
                     body.append('<a href="%s">' % cita.get_absolute_url())
                     body.append(esc(cita))
                     body.append('</a></li>')
