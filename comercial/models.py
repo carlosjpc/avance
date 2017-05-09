@@ -268,7 +268,7 @@ class Cita(models.Model):
     Atiende = models.ForeignKey(User, blank=True)
 
     class Meta:
-        unique_together = ('Fecha', 'Atiende',)
+        unique_together = ('Fecha', 'Hora', 'Atiende',)
 
     def get_absolute_url(self):
         return '/comercial/detalle_cita/%d/' % self.pk
@@ -277,4 +277,4 @@ class Cita(models.Model):
         if self.Cliente:
             return self.Cliente.Nombre_Empresa + ' | ' + self.Descripcion
         elif self.Agencia:
-            return self.Agencia.get_Marca_display() + self.Agencia.Colonia + ' | ' + self.Descripcion
+            return self.Agencia.get_Marca_display() + self.Agencia.Colonia

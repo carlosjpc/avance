@@ -177,15 +177,21 @@ def nueva_cita_agencia(request):
             dias = citaform.cleaned_data.get('Todos_los')
             hora = citaform.cleaned_data.get('Hora')
             today = datetime.now()
-            for dia in dias:
-                next_dia = next_weekday(today, dia)
-                for x in range(0, 51):
-                    siguiente_semana = timedelta(weeks = x)
-                    fecha = next_dia + siguiente_semana
-                    nueva_cita = Cita(Agencia=agencia, Atiende=request.user, Hora=hora, Fecha=fecha, Descripcion=agencia.get_Marca_display())
-                    nueva_cita.save()
-            url = reverse('comercial/calendario')
-            return HttpResponseRedirect(url)
+            if "6" in dias:
+                for dia in dias:
+                    if not dia == "6":
+                        fecha = next_weekday(today, dia)
+                        nueva_cita = Cita(Agencia=agencia, Atiende=request.user, Hora=hora, Fecha=fecha, Descripcion=agencia.get_Marca_display())
+                        nueva_cita.save()
+            else:
+                for dia in dias:
+                    next_dia = next_weekday(today, dia)
+                    for x in range(0, 51):
+                        siguiente_semana = timedelta(weeks = x)
+                        fecha = next_dia + siguiente_semana
+                        nueva_cita = Cita(Agencia=agencia, Atiende=request.user, Hora=hora, Fecha=fecha, Descripcion=agencia.get_Marca_display())
+                        nueva_cita.save()
+            return HttpResponseRedirect('/comercial/calendario/')
         else:
             return render(request, 'comercial/form_wdate.html', {'form': citaform})
     citaform = CitaAgenciaForm(user=request.user)

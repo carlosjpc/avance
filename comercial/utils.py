@@ -8,7 +8,7 @@ def next_weekday(d, weekday):
     days_ahead = int(weekday) - d.weekday()
     if days_ahead <= 0: # Target day already happened this week
         days_ahead += 7
-    return d + timedelta(days_ahead)
+    return d + timedelta(days = days_ahead)
 
 class AgendaCalendar(HTMLCalendar):
 

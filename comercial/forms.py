@@ -207,6 +207,7 @@ class CitaClienteForm(ModelForm):
 
 class CitaAgenciaForm(forms.Form):
     dias = (
+            ("6", "una_vez"),
             ("0", "lunes"),
             ("1", "martes"),
             ("2", "miercoles"),
