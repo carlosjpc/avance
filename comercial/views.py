@@ -902,5 +902,8 @@ def detalle_interaccion(request):
     inte_pk = request.GET.get('inte_pk', None)
     if inte_pk:
         inte = get_object_or_404(Interaccion, pk=int(inte_pk))
-        return HttpResponse(inte)
+        url_cliente = inte.del_Caso.Cliente.get_absolute_url()
+        url_caso = inte.del_Caso.get_absolute_url()
+        return HttpResponse('<p><a href="' + url_cliente + '">' + inte.del_Caso.Cliente.Nombre_Empresa + '</a></p>'
+                            '<p><a href="' + url_caso + '">' + inte.Descripcion + '</a></p>')
     return HttpResponse('Error')

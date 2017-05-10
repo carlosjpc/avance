@@ -112,6 +112,10 @@ ul {
 .today {
   background-color: #e2a295;
 }
-.cita {
+.evento {
   font-size:10px;
+  line-height: 1.1;
+}
+.interaccion {
+  color: #269e0c;
 }

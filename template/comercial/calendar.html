@@ -42,6 +42,7 @@ $('a.cita').on('click', function(event){
 });
 $('a.interaccion').on('click', function(event){
   event.preventDefault();
+  console.log("entre");
   var element = $(this);
   $.ajax({
     url : '/comercial/detalle_interaccion/',

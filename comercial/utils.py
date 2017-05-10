@@ -28,12 +28,13 @@ class AgendaCalendar(HTMLCalendar):
                 body = ['<ul>']
                 for cita in self.citas[day]:
                     if isinstance(cita,Cita):
-                        body.append('<li>')
+                        body.append('<li class="evento">')
                         body.append('<a data-id='+str(cita.pk)+' class="cita">')
+                        body.append(esc(cita))
                     elif isinstance(cita,Interaccion):
-                        body.append('<li>')
-                        body.append('<a data-id='+str(cita.pk)+' class="interaccion">')
-                    body.append(esc(cita))
+                        body.append('<li class="evento">')
+                        body.append('<a data-id='+str(cita.pk)+' class="interaccion">Llamar ')
+                        body.append(esc(cita.del_Caso.Cliente.Nombre_Empresa))
                     body.append('</a></li>')
                 body.append('</ul>')
                 return self.day_cell(cssclass, '%d %s' % (day, ''.join(body)))

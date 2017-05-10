@@ -150,7 +150,7 @@ class Agencia_Automotriz(models.Model):
         unique_together = ('Marca', 'Grupo', 'Colonia',)
 
     def get_absolute_url(self):
-        return '/comercial/detalle_agencia/%d/' % self.pk    
+        return '/comercial/detalle_agencia/%d/' % self.pk
 
     def __str__(self):
         return self.get_Marca_display() + ' | ' + self.Ciudad + ' | ' + self.Colonia + ' | ' + self.Atiende.first_name
@@ -214,6 +214,9 @@ class Caso(models.Model):
     Activo = models.BooleanField(default=True, blank=True)
 
     tracker = FieldTracker()
+
+    def get_absolute_url(self):
+        return '/comercial/detalle_caso/%d/' % self.pk
 
     def __str__(self):
         return self.Cliente.Nombre_Empresa + ' | ' + self.Descripcion + ' | ' + self.get_Etapa_display()
