@@ -46,6 +46,7 @@ urlpatterns = [
     url(r'^calendario_t/(?P<ano>\d{4})/(?P<mes>[\d]{1,2})/$', views.calendario_t, name="calendario_t"),
     url(r'^nueva_cita_cliente/$', views.nueva_cita_cliente, name="nueva_cita_cliente"),
     url(r'^nueva_cita_agencia/$', views.nueva_cita_agencia, name="nueva_cita_agencia"),
-    url(r'^detalle_cita/(?P<pk>[0-9]+)/$', views.detalle_cita, name="detalle_cita"),
+    url(r'^detalle_cita/$', views.detalle_cita, name="detalle_cita"),
+    url(r'^detalle_interaccion/$', views.detalle_interaccion, name="detalle_interaccion"),
     #pdf
 ]

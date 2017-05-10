@@ -1,6 +1,11 @@
 {% extends "comercial/base_comercial.html" %}
 
 {% block AreaTrabajo %}
+<div class="row">
+  </br>
+  <div id="info-evento">
+  </div>
+</div>
 </br></br>
 <div class="col-sm-11 col-sm-offset-1">
   {{ calendar }}</br></br>
@@ -18,4 +23,35 @@
   </div>
   </br></br>
 </div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+$('a.cita').on('click', function(event){
+  event.preventDefault();
+  var element = $(this);
+  $.ajax({
+    url : '/comercial/detalle_cita/',
+    type: 'GET',
+    data: { cita_pk : element.attr("data-id")},
+
+    success : function(response){
+      $('#info-evento').html(' ' + response);
+    }
+  });
+});
+$('a.interaccion').on('click', function(event){
+  event.preventDefault();
+  var element = $(this);
+  $.ajax({
+    url : '/comercial/detalle_interaccion/',
+    type: 'GET',
+    data: { inte_pk : element.attr("data-id")},
+
+    success : function(response){
+      $('#info-evento').html(' ' + response);
+    }
+  });
+});
+</script>
 {% endblock %}

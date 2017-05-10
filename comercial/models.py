@@ -37,6 +37,9 @@ class Cliente(models.Model):
     Atiende = models.ForeignKey(User, blank=True)
     Status = models.CharField(max_length=2, choices=status_choices, default=PROSPECTO, blank=True)
 
+    def get_absolute_url(self):
+        return '/comercial/detalle_cliente/%d/' % self.pk
+
     def __str__(self):
         return self.Nombre_Empresa
 
@@ -145,6 +148,9 @@ class Agencia_Automotriz(models.Model):
 
     class Meta:
         unique_together = ('Marca', 'Grupo', 'Colonia',)
+
+    def get_absolute_url(self):
+        return '/comercial/detalle_agencia/%d/' % self.pk    
 
     def __str__(self):
         return self.get_Marca_display() + ' | ' + self.Ciudad + ' | ' + self.Colonia + ' | ' + self.Atiende.first_name
@@ -277,4 +283,4 @@ class Cita(models.Model):
         if self.Cliente:
             return self.Cliente.Nombre_Empresa + ' | ' + self.Descripcion
         elif self.Agencia:
-            return self.Agencia.get_Marca_display() + self.Agencia.Colonia
+            return self.Agencia.get_Marca_display() + ' | ' + self.Agencia.Colonia

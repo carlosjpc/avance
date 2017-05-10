@@ -14,6 +14,7 @@ from django.urls import reverse_lazy
 from django.db.models import Q
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from itertools import chain
 
 #app imports
 from comercial.models import (Cliente, Contacto_C, Direccion_Fiscal_Cliente, Agencia_Automotriz, Contacto_Agencia,
@@ -197,15 +198,15 @@ def nueva_cita_agencia(request):
     citaform = CitaAgenciaForm(user=request.user)
     return render(request, 'comercial/form_wdate.html', {'form': citaform})
 
-@login_required
-@user_passes_test(vendedor_check)
-def detalle_cita(request, pk):
-    user = request.user
-    if user.groups.filter(name='comercial_vendedor').exists():
-        cita = Cita.objects.get(pk=pk, Atiende=user)
-    else:
-        cita = Cita.objects.get(pk=pk)
-    return render(request, 'comercial/detalle_cita.html', {'cita': cita})
+#@login_required
+#@user_passes_test(vendedor_check)
+#def detalle_cita(request, pk):
+#    user = request.user
+#    if user.groups.filter(name='comercial_vendedor').exists():
+#        cita = Cita.objects.get(pk=pk, Atiende=user)
+#    else:
+#        cita = Cita.objects.get(pk=pk)
+#    return render(request, 'comercial/detalle_cita.html', {'cita': cita})
 
 #------------------------------------ Views Casos ------------------------------------#
 
@@ -851,8 +852,11 @@ from comercial.utils import AgendaCalendar
 
 def calendario(request):
     hoy = date.today()
-    mis_citas = Cita.objects.filter(Atiende=request.user, Fecha__year=hoy.year,
-                                    Fecha__month=hoy.month).order_by('Fecha')
+    citas = Cita.objects.filter(Atiende=request.user, Fecha__year=hoy.year,
+                                Fecha__month=hoy.month).order_by('Fecha')
+    seguimientos = Interaccion.objects.filter(Hecha_por=request.user, Buscar_el__year=hoy.year,
+                                              Buscar_el__month=hoy.month).order_by('Buscar_el')
+    mis_citas = list(chain(citas, seguimientos))
     cal = AgendaCalendar(mis_citas).formatmonth(hoy.year, hoy.month)
     next_month = hoy + relativedelta(months=+1)
     previous_month = hoy + relativedelta(months=-1)
@@ -866,8 +870,11 @@ def calendario_t(request, ano, mes):
     mes = int(mes)
     fecha = date.today()
     fecha = fecha.replace(year = ano, month = mes)
-    mis_citas = Cita.objects.filter(Atiende=request.user, Fecha__year=fecha.year,
-                                    Fecha__month=fecha.month).order_by('Fecha')
+    citas = Cita.objects.filter(Atiende=request.user, Fecha__year=fecha.year,
+                                Fecha__month=fecha.month).order_by('Fecha')
+    seguimientos = Interaccion.objects.filter(Hecha_por=request.user, Buscar_el__year=fecha.year,
+                                              Buscar_el__month=fecha.month).order_by('Buscar_el')
+    mis_citas = list(chain(citas, seguimientos))
     cal = AgendaCalendar(mis_citas).formatmonth(fecha.year, fecha.month)
     next_month = fecha + relativedelta(months=+1)
     previous_month = fecha + relativedelta(months=-1)
@@ -875,3 +882,25 @@ def calendario_t(request, ano, mes):
                'previous_month': previous_month.strftime("%B"),
                'n_month': next_month, 'p_month': previous_month,}
     return render(request, 'comercial/calendar.html', context)
+
+def detalle_cita(request):
+    cita_pk = request.GET.get('cita_pk', None)
+    if cita_pk:
+        cita = get_object_or_404(Cita, pk=int(cita_pk))
+        if cita.Cliente:
+            url = cita.Cliente.get_absolute_url()
+            return HttpResponse('<p><a href="' + url + '">' + cita.Cliente.Nombre_Empresa + '</a></p>'
+                                '<p>Descripcion: ' + cita.Descripcion + '</p>'
+                                '<p>El ' + str(cita.Fecha) + ' a las: ' + str(cita.Hora) + '</p>')
+        elif cita.Agencia:
+            url = cita.Agencia.get_absolute_url()
+            return HttpResponse('<p><a href="' + url + '">' + cita.Agencia.get_Marca_display() + ' | ' + cita.Agencia.Colonia + '</a></p>'
+                                '<p>El ' + str(cita.Fecha) + ' a las: ' + str(cita.Hora) + '</p>')
+    return HttpResponse('Error')
+
+def detalle_interaccion(request):
+    inte_pk = request.GET.get('inte_pk', None)
+    if inte_pk:
+        inte = get_object_or_404(Interaccion, pk=int(inte_pk))
+        return HttpResponse(inte)
+    return HttpResponse('Error')

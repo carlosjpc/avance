@@ -4,6 +4,8 @@ from itertools import groupby
 from datetime import datetime, timedelta
 from django.utils.html import conditional_escape as esc
 
+from comercial.models import Cita, Interaccion
+
 def next_weekday(d, weekday):
     days_ahead = int(weekday) - d.weekday()
     if days_ahead <= 0: # Target day already happened this week
@@ -25,8 +27,12 @@ class AgendaCalendar(HTMLCalendar):
                 cssclass += ' filled'
                 body = ['<ul>']
                 for cita in self.citas[day]:
-                    body.append('<li class="cita">')
-                    body.append('<a href="%s">' % cita.get_absolute_url())
+                    if isinstance(cita,Cita):
+                        body.append('<li>')
+                        body.append('<a data-id='+str(cita.pk)+' class="cita">')
+                    elif isinstance(cita,Interaccion):
+                        body.append('<li>')
+                        body.append('<a data-id='+str(cita.pk)+' class="interaccion">')
                     body.append(esc(cita))
                     body.append('</a></li>')
                 body.append('</ul>')
