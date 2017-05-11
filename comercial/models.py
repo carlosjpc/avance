@@ -88,6 +88,7 @@ class Agencia_Automotriz(models.Model):
     chevrolet = 'CH'
     chrysler = 'CY'
     ford = 'FO'
+    gmc = 'GM'
     honda = 'HO'
     hyundai = 'HY'
     kia = 'KI'
@@ -107,6 +108,7 @@ class Agencia_Automotriz(models.Model):
         (chevrolet, 'CHEVROLET'),
         (chrysler, 'CHRYSLER'),
         (ford, 'FORD'),
+        (gmc, 'GMC | BUICK'),
         (honda, 'HONDA'),
         (hyundai, 'HYUNDAI'),
         (kia, 'KIA'),
@@ -121,17 +123,23 @@ class Agencia_Automotriz(models.Model):
         (volvo, 'VOLVO'),
     )
     alden = 'al'
+    aeroplaza = 'ae'
+    andrade = 'an'
     camsa = 'ca'
     cever = 'ce'
     dalton = 'da'
+    excelencia = 'ge'
     picacho = 'pi'
     sonni = 'so'
     uribe = 'ur'
     independiente = 'in'
     corp_choices = (
         (alden, 'ALDEN'),
+        (aeroplaza, 'AEROPLAZA AUT'),
+        (andrade, 'ANDRADE'),
         (camsa, 'CAMSA'),
         (cever, 'CEVER'),
+        (excelencia, 'GRUPO EXCELENCIA'),
         (picacho, 'PICACHO'),
         (dalton, 'DALTON'),
         (sonni, 'SONNI'),

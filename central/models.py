@@ -126,15 +126,18 @@ class Documentacion_PMoral(models.Model):
     #Solicitud Arrendamiento
     Firma_Solicitud_Rep_legal = models.BooleanField(default=False)
     Firma_Solicitud_Aval = models.BooleanField(default=False)
+    Anotacion_Solicitud = models.TextField(blank=True, null=True)
     #Edos Financieros
     Edo_Fin_Anual_1 = models.BooleanField(default=False)
     Edo_Fin_Anual_2 = models.BooleanField(default=False)
     Edo_Fin_Parciales = models.BooleanField(default=False)
+    Anotacion_Edos_Fin = models.TextField(blank=True, null=True)
     #Declaraciones y Acuses
     Declaracion_Anual_1 = models.BooleanField(default=False)
     Declaracion_Anual_2 = models.BooleanField(default=False)
     Acuse_Declaracion_1 = models.BooleanField(default=False)
     Acuse_Declaracion_2 = models.BooleanField(default=False)
+    Anotacion_Declaraciones_y_Acuses = models.TextField(blank=True, null=True)
     #acta constitutiva
     Acta_Constitutiva = models.BooleanField(default=False)
     Sello_Inscripcion_Acta_Constitutiva = models.BooleanField(default=False)
@@ -142,8 +145,10 @@ class Documentacion_PMoral(models.Model):
     Num_Acta_Constitutiva = models.PositiveIntegerField(blank=True, null=True)
     Poderes = models.BooleanField(default=False)
     Sello_Inscripcion_Poderes = models.BooleanField(default=False)
+    Anotacion_Acta_Constitutiva = models.TextField(blank=True, null=True)
     #RFC
     RFC = models.BooleanField(default=False)
+    Anotacion_RFC = models.TextField(blank=True, null=True)
     #edos de cuenta bancarios
     Edo_cuenta_Rep_Legal_1 = models.BooleanField(default=False)
     Edo_cuenta_Rep_Legal_2 = models.BooleanField(default=False)
@@ -151,6 +156,7 @@ class Documentacion_PMoral(models.Model):
     Edo_cuenta_Aval_1 = models.BooleanField(default=False)
     Edo_cuenta_Aval_2 = models.BooleanField(default=False)
     Edo_cuenta_Aval_3 = models.BooleanField(default=False)
+    Anotacion_Edos_Cuenta = models.TextField(blank=True, null=True)
     #identificaciones
     Identificacion_Rep_legal = models.BooleanField(default=False)
     Tipo_identificacion_Rep_legal = models.CharField(max_length=2, choices=identificacion_choices, default=ife, blank=True, null=True)
@@ -161,6 +167,7 @@ class Documentacion_PMoral(models.Model):
     Tipo_identificacion_Aval = models.CharField(max_length=2, choices=identificacion_choices, default=ife, blank=True, null=True)
     Num_identificacion_Aval = models.CharField(max_length=20, blank=True, null=True)
     Vigente_hasta_identificacion_Aval = models.DateField(blank=True, null=True)
+    Anotacion_Identificaciones = models.TextField(blank=True, null=True)
     #comprobantes domicilio
     Comprobante_domicilio_Empresa = models.BooleanField(default=False)
     Fuente_comprobante_domicilio_Empresa = models.CharField(max_length=2, choices=comprobante_choices, default=cfe, blank=True, null=True)
@@ -170,10 +177,12 @@ class Documentacion_PMoral(models.Model):
     Fuente_comprobante_domicilio_Aval = models.CharField(max_length=2, choices=comprobante_choices, default=cfe, blank=True, null=True)
     Domicilio_comprobante_domicilio_Aval = models.CharField(max_length=20, blank=True, null=True)
     Fecha_comprobante_domicilio_Aval = models.DateField(blank=True, null=True)
+    Anotacion_Comprobantes_Domicilio = models.TextField(blank=True, null=True)
     #autorizaciones Buro
     Aut_Buro_Empresa = models.BooleanField(default=False)
     Aut_Buro_Rep_legal = models.BooleanField(default=False)
     Aut_Buro_Aval = models.BooleanField(default=False)
+    Anotacion_Autorizaciones_Buro = models.TextField(blank=True, null=True)
     #Nota
     Nota = models.CharField(max_length=800, blank=True, null=True)
     Necesario_para_Evaluacion = models.BooleanField(default=False)

@@ -198,16 +198,6 @@ def nueva_cita_agencia(request):
     citaform = CitaAgenciaForm(user=request.user)
     return render(request, 'comercial/form_wdate.html', {'form': citaform})
 
-#@login_required
-#@user_passes_test(vendedor_check)
-#def detalle_cita(request, pk):
-#    user = request.user
-#    if user.groups.filter(name='comercial_vendedor').exists():
-#        cita = Cita.objects.get(pk=pk, Atiende=user)
-#    else:
-#        cita = Cita.objects.get(pk=pk)
-#    return render(request, 'comercial/detalle_cita.html', {'cita': cita})
-
 #------------------------------------ Views Casos ------------------------------------#
 
 @login_required
@@ -438,9 +428,9 @@ def nueva_agencia(request):
 def lista_agencias(request):
     user = request.user
     if user.groups.filter(name='comercial_vendedor').exists():
-        lista_agencias = Agencia_Automotriz.objects.filter(Atiende=user)
+        lista_agencias = Agencia_Automotriz.objects.filter(Atiende=user).order_by('Marca')
     else:
-        lista_agencias = Agencia_Automotriz.objects.all()
+        lista_agencias = Agencia_Automotriz.objects.all().order_by('Marca')
     paginator = Paginator(lista_agencias, 20)
     page = request.GET.get('page')
     try:
