@@ -40,7 +40,7 @@
       <a href="{% url 'editar_contacto_agencia' pk=contacto.pk %}">Editar contacto</a>
       <p></p>
     {% empty %}
-      <p>No se han agregado contactos para este cliente.</p>
+      <p>No se han agregado contactos para esta agencia.</p>
     {% endfor %}
     </br>
     <p><a href="{% url 'nuevo_contacto_agencia' pk=agencia.pk %}">Agregar Contacto</a></p>

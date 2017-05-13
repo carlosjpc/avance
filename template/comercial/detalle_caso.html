@@ -3,7 +3,10 @@
 {% load comercial_tags %}
 
 {% block AreaTrabajo %}
-<h3 class="txt-c">{{ caso }}</h3>
+<h3 class="txt-c">
+  <a href="{% url 'detalle_cliente' pk=caso.Cliente.pk %}">{{ caso.Cliente.Nombre_Empresa }}</a>
+  {{ caso.Descripcion }}
+</h3>
 <div class="row">
   <div class="col-sm-3 col-sm-offset-1">
     {% if request.user|has_group:"comercial_vendedor" or request.user|has_group:"comercial_mger" %}
@@ -75,7 +78,7 @@
 <div class="row">
   <div class="col-sm-3 col-sm-offset-1">
     {% if caso.Agencia %}
-      <p>Agencia: {{ caso.Agencia }} </p>
+      <p><a href="{% url 'detalle_agencia' pk=caso.Agencia.pk %}">Agencia: {{ caso.Agencia }} </a></p>
     {% endif %}
   </div>
   <div class="col-sm-3 col-sm-offset-1">
@@ -89,6 +92,7 @@
     {% endif %}
   </div>
 </div>
+</br></br>
 {% endblock %}
 
 {% block javascript %}

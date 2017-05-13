@@ -4,11 +4,28 @@
 {% block AreaTrabajo %}
 
 <div class="row">
-  <div class="col-sm-7 col-sm-offset-2">
-    <h2>Lista Agencias</h2></br>
+  <div class="col-sm-9 col-sm-offset-2">
+    <div class="row">
+      <div class="col-sm-9">
+        <h2>Lista Agencias</h2></br>
+      </div>
+      <div class="col-sm-3">
+        <p id="aa"><a href="{% url 'nueva_agencia' %}">Agregar Agencia</a></p>
+      </div>
+    </div>
     {% for agencia in agencias %}
-      <h4><a href="{% url 'detalle_agencia' pk=agencia.pk %}">{{ agencia }}</a></h4>
-    {% endfor %}  
+    <div class="row borde-inferior">
+      <div class="col-sm-5">
+        <h4><a href="{% url 'detalle_agencia' pk=agencia.pk %}">{{ agencia.get_Marca_display }} {{ agencia.get_Grupo_display }} </a></h4>
+      </div>
+      <div class="col-sm-4">
+        <h4>{{ agencia.Colonia }}</h4>
+      </div>
+      <div class="col-sm-2">
+        <h4>{{ agencia.Ciudad }}</h4>
+      </div>
+    </div>
+    {% endfor %}
     <div class="pagination">
         <span class="step-links">
             {% if agencias.has_previous %}

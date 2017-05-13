@@ -474,7 +474,7 @@ def detalle_agencia(request, pk):
         except ObjectDoesNotExist:
             raise Http404
     elif user.groups.filter(name='comercial_mger').exists() or user.groups.filter(name='comercial_backup').exists():
-        agencia = get_object_or_404(Agencia, pk=pk)
+        agencia = get_object_or_404(Agencia_Automotriz, pk=pk)
     try:
         contactos = Contacto_Agencia.objects.filter(Agencia=agencia)
     except ObjectDoesNotExist:
@@ -486,30 +486,27 @@ def detalle_agencia(request, pk):
     return render(request, 'comercial/detalle_agencia.html', {'agencia': agencia, 'contactos': contactos, 'cuentas': cuentas,})
 
 @login_required
+@user_passes_test(comercial_check)
 def nuevo_contacto_agencia(request, pk):
     user = request.user
     if user.groups.filter(name='comercial_vendedor').exists():
         agencia = Agencia_Automotriz.objects.get(pk=pk, Atiende=user)
-        contactoform = Contacto_Agencia_IniForm()
     elif user.groups.filter(name='comercial_mger').exists() or user.groups.filter(name='comercial_backup').exists():
         agencia = get_object_or_404(Agencia_Automotriz, pk=pk)
-        contactoform = Contacto_Agencia_AForm()
+    ContactoAFormSet = formset_factory(Contacto_Agencia_IniForm, extra=1)
     if request.method == 'POST':
-        if user.groups.filter(name='comercial_vendedor').exists():
-            contactoform = Contacto_Agencia_IniForm(request.POST)
-        elif user.groups.filter(name='comercial_mger').exists() or user.groups.filter(name='comercial_backup').exists():
-            contactoform = Contacto_Agencia_AForm(request.POST)
-        if contactoform.is_valid():
-            nuevo_contacto = contactoform.save(commit=False)
-            if user.groups.filter(name='comercial_vendedor').exists():
-                nuevo_contacto.Atiende = user
-            nuevo_contacto.Agencia = agencia
-            nuevo_contacto.save()
-            url = reverse('detalle_agencia', kwargs={'pk': agencia.pk})
-            return HttpResponseRedirect(url)
-        else:
-            return render(request, 'comercial/form.html', {'form': contactoform,})
-    return render(request, 'comercial/form.html', {'form': contactoform,})
+        formset = ContactoAFormSet(request.POST)
+        for form in formset:
+            if form.is_valid():
+                new_form = form.save(commit=False)
+                new_form.Atiende = agencia.Atiende
+                new_form.Agencia = agencia
+                new_form.save()
+            else:
+                print("Form is not valid")
+        url = reverse('detalle_agencia', kwargs={'pk': agencia.pk})
+        return HttpResponseRedirect(url)
+    return render(request, 'comercial/nuevo_contacto_agencia.html', {'formset': ContactoAFormSet,})
 
 @login_required
 def editar_contacto_agencia(request, pk):

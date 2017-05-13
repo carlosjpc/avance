@@ -119,3 +119,10 @@ ul {
 .interaccion {
   color: #269e0c;
 }
+.borde-inferior {
+  border-bottom: 2px solid black;
+}
+#aa {
+  position: relative;
+  margin-top: 33px;
+}
