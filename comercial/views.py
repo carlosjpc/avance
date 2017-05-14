@@ -476,7 +476,7 @@ def detalle_agencia(request, pk):
     elif user.groups.filter(name='comercial_mger').exists() or user.groups.filter(name='comercial_backup').exists():
         agencia = get_object_or_404(Agencia_Automotriz, pk=pk)
     try:
-        contactos = Contacto_Agencia.objects.filter(Agencia=agencia)
+        contactos = Contacto_Agencia.objects.filter(Agencia=agencia).order_by('Nombre_del_Contacto')
     except ObjectDoesNotExist:
         pass
     try:
@@ -843,7 +843,9 @@ def calendario(request):
                                 Fecha__month=hoy.month).order_by('Fecha')
     seguimientos = Interaccion.objects.filter(Hecha_por=request.user, Buscar_el__year=hoy.year,
                                               Buscar_el__month=hoy.month).order_by('Buscar_el')
-    mis_citas = list(chain(citas, seguimientos))
+    casos = Caso.objects.filter(Atiende=request.user, Buscar_el__year=hoy.year,
+                                Buscar_el__month=hoy.month, Activo=True).order_by('Buscar_el')
+    mis_citas = list(chain(citas, seguimientos, casos))
     cal = AgendaCalendar(mis_citas).formatmonth(hoy.year, hoy.month)
     next_month = hoy + relativedelta(months=+1)
     previous_month = hoy + relativedelta(months=-1)
@@ -861,7 +863,9 @@ def calendario_t(request, ano, mes):
                                 Fecha__month=fecha.month).order_by('Fecha')
     seguimientos = Interaccion.objects.filter(Hecha_por=request.user, Buscar_el__year=fecha.year,
                                               Buscar_el__month=fecha.month).order_by('Buscar_el')
-    mis_citas = list(chain(citas, seguimientos))
+    casos = Caso.objects.filter(Atiende=request.user, Buscar_el__year=hoy.year,
+                                Buscar_el__month=hoy.month, Activo=True).order_by('Buscar_el')
+    mis_citas = list(chain(citas, seguimientos, casos))
     cal = AgendaCalendar(mis_citas).formatmonth(fecha.year, fecha.month)
     next_month = fecha + relativedelta(months=+1)
     previous_month = fecha + relativedelta(months=-1)
