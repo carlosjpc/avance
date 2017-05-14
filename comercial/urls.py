@@ -40,11 +40,13 @@ urlpatterns = [
     url(r'^nueva_documentacion_caso/(?P<pk_caso>[0-9]+)/$', views.nueva_documentacion_caso, name="nueva_documentacion_caso"),
     url(r'^actualizar_documentacion_caso/(?P<pk>[0-9]+)/$', views.actualizar_documentacion_caso, name="actualizar_documentacion_caso"),
     #Cita urls
-    url(r'^calendario/$', views.calendario, name="calendario"),
-    url(r'^calendario_t/(?P<ano>\d{4})/(?P<mes>[\d]{1,2})/$', views.calendario_t, name="calendario_t"),
     url(r'^nueva_cita_cliente/$', views.nueva_cita_cliente, name="nueva_cita_cliente"),
     url(r'^nueva_cita_agencia/$', views.nueva_cita_agencia, name="nueva_cita_agencia"),
+    #Calendario urls
+    url(r'^calendario/$', views.calendario, name="calendario"),
+    url(r'^calendario_t/(?P<ano>\d{4})/(?P<mes>[\d]{1,2})/$', views.calendario_t, name="calendario_t"),
     url(r'^detalle_cita/$', views.detalle_cita, name="detalle_cita"),
     url(r'^detalle_interaccion/$', views.detalle_interaccion, name="detalle_interaccion"),
+    url(r'^detalle_caso_calendario/$', views.detalle_caso_calendario, name="detalle_caso_calendario"),
     #pdf
 ]

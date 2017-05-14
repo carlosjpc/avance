@@ -40,7 +40,7 @@ class Cliente(models.Model):
     def get_absolute_url(self):
         return '/comercial/detalle_cliente/%d/' % self.pk
 
-    def __str__(self):
+    def __unicode__(self):
         return self.Nombre_Empresa
 
 class Direccion_Fiscal_Cliente(models.Model):
@@ -53,7 +53,7 @@ class Direccion_Fiscal_Cliente(models.Model):
     Pais = models.CharField(max_length=40, default='Mexico')
     Cliente = models.OneToOneField(Cliente, on_delete=models.CASCADE)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.Cliente.Nombre_Empresa + self.Calle
 
 class Contacto_C(models.Model):
@@ -78,7 +78,7 @@ class Contacto_C(models.Model):
     class Meta:
         unique_together = ('Cliente', 'Nombre_del_Contacto',)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.Nombre_del_Contacto
 
 class Agencia_Automotriz(models.Model):
@@ -160,7 +160,7 @@ class Agencia_Automotriz(models.Model):
     def get_absolute_url(self):
         return '/comercial/detalle_agencia/%d/' % self.pk
 
-    def __str__(self):
+    def __unicode__(self):
         return self.get_Marca_display() + ' | ' + self.Ciudad + ' | ' + self.Colonia + ' | ' + self.Atiende.first_name
 
 class Contacto_Agencia(models.Model):
@@ -184,7 +184,7 @@ class Contacto_Agencia(models.Model):
     class Meta:
         unique_together = ('Agencia', 'Email',)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.Nombre_del_Contacto
 
 class Caso(models.Model):
@@ -226,7 +226,7 @@ class Caso(models.Model):
     def get_absolute_url(self):
         return '/comercial/detalle_caso/%d/' % self.pk
 
-    def __str__(self):
+    def __unicode__(self):
         return self.Cliente.Nombre_Empresa + ' | ' + self.Descripcion + ' | ' + self.get_Etapa_display()
 
 class Historial_Etapa(models.Model):
@@ -263,7 +263,7 @@ class Interaccion(models.Model):
     Hecha_por = models.ForeignKey(User, blank=True)
     Hist_Etapa = models.ForeignKey(Historial_Etapa, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return str(self.Numero) + ' | ' + self.del_Caso.Cliente.Nombre_Empresa + ' | ' + self.del_Caso.Descripcion + ' | ' + str(self.Fecha)
 
 class Anotacion(models.Model):
@@ -273,7 +273,7 @@ class Anotacion(models.Model):
     Hecha_por = models.ForeignKey(User, blank=True)
     Hist_Etapa = models.ForeignKey(Historial_Etapa, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.al_Caso.Cliente.Nombre_Empresa + ' | ' + self.Requerimiento
 
 class Cita(models.Model):
@@ -290,7 +290,7 @@ class Cita(models.Model):
     def get_absolute_url(self):
         return '/comercial/detalle_cita/%d/' % self.pk
 
-    def __str__(self):
+    def __unicode__(self):
         if self.Cliente:
             return self.Cliente.Nombre_Empresa + ' | ' + self.Descripcion
         elif self.Agencia:

@@ -53,5 +53,18 @@ $('a.interaccion').on('click', function(event){
     }
   });
 });
+$('a.caso').on('click', function(event){
+  event.preventDefault();
+  var element = $(this);
+  $.ajax({
+    url : '/comercial/detalle_caso_calendario/',
+    type: 'GET',
+    data: { caso_pk : element.attr("data-id")},
+
+    success : function(response){
+      $('#info-evento').html(' ' + response);
+    }
+  });
+});
 </script>
 {% endblock %}

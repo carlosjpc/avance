@@ -898,3 +898,11 @@ def detalle_interaccion(request):
         return HttpResponse('<p><a href="' + url_cliente + '">' + inte.del_Caso.Cliente.Nombre_Empresa + '</a></p>'
                             '<p><a href="' + url_caso + '">' + inte.Descripcion + '</a></p>')
     return HttpResponse('Error')
+
+def detalle_caso_calendario(request):
+    caso_pk = request.GET.get('caso_pk', None)
+    if caso_pk:
+        caso = get_object_or_404(Caso, pk=int(caso_pk))
+        url_cliente = caso.Cliente.get_absolute_url()
+        return HttpResponse('<p><a href="' + url_cliente + '">' + caso.Cliente.Nombre_Empresa + '</a></p>')
+    return HttpResponse('Error')
