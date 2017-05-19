@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
@@ -15,6 +16,7 @@ from django.db.models import Q
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from itertools import chain
+from django.views.generic.edit import DeleteView
 
 #app imports
 from comercial.models import (Cliente, Contacto_C, Direccion_Fiscal_Cliente, Agencia_Automotriz, Contacto_Agencia,
@@ -23,8 +25,8 @@ from comercial.forms import (ClienteForm, Cliente_VForm, Contacto_CForm, Contact
                             Caso_VForm, Caso_CVForm, Caso_IniForm, Caso_StatusForm,
                             Agencia_AutomotrizForm, Agencia_AutomotrizVForm, Contacto_AgenciaForm,
                             Contacto_AgenciaVForm, Contacto_Agencia_IniForm, Direccion_Fiscal_ClienteForm,
-                            Contacto_Agencia_AForm, Direccion_Fiscal_ClienteCForm, InteraccionForm,
-                            AnotacionForm, CitaClienteForm, CitaAgenciaForm)
+                            Direccion_Fiscal_ClienteCForm, InteraccionForm, AnotacionForm, CitaClienteForm,
+                            CitaAgenciaForm)
 
 from central.models import (Documentacion_PMoral, Contrato, Anexo, Factura)
 from central.forms import (Documentacion_PMoral_Form)
@@ -302,6 +304,18 @@ def detalle_caso(request, pk):
     context = {'caso': caso, 'interacciones': interacciones, 'anotaciones': anotaciones, 'historial': historial,}
     return render(request, 'comercial/detalle_caso.html', context)
 
+class CasoDelete(DeleteView):
+    model = Caso
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('redirect')
+
+    def get_object(self, queryset=None):
+        """ Hook to ensure object owner is request.user """
+        caso = super(CasoDelete, self).get_object()
+        if not caso.Atiende == self.request.user and caso.Etapa == 'int':
+            raise Http404
+        return caso
+
 @login_required
 @user_passes_test(comercial_check)
 def agregar_interaccion(request, pk_caso):
@@ -485,6 +499,18 @@ def detalle_agencia(request, pk):
         pass
     return render(request, 'comercial/detalle_agencia.html', {'agencia': agencia, 'contactos': contactos, 'cuentas': cuentas,})
 
+class AgenciaDelete(DeleteView):
+    model = Agencia_Automotriz
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('lista_agencias')
+
+    def get_object(self, queryset=None):
+        """ Hook to ensure object owner is request.user """
+        agencia = super(AgenciaDelete, self).get_object()
+        if not agencia.Atiende == self.request.user:
+            raise Http404
+        return agencia
+
 @login_required
 @user_passes_test(comercial_check)
 def nuevo_contacto_agencia(request, pk):
@@ -543,6 +569,46 @@ def lista_casos_vendedor_agencia(request, pk):
     except EmptyPage:
         casos = paginator.page(paginator.num_pages)
     return render(request, 'comercial/lista_casos_vendedor.html', {'contacto': contacto, 'casos': casos,})
+
+@login_required
+def lista_vendedores_agencia(request):
+    user = request.user
+    #Adjust queryset according to parameters
+    if user.groups.filter(name='comercial_vendedor').exists():
+        lista_vendedores = Contacto_Agencia.objects.filter(Atiende=user).order_by("Nombre_del_Contacto")
+    else:
+        lista_vendedores = Contacto_Agencia.objects.filter.all().order_by("Nombre_del_Contacto")
+    query = request.GET.get("q")
+    if query:
+        lista_vendedores = lista_vendedores.filter(
+                Q(Nombre_del_Contacto__icontains=query) |
+                Q(Celular__icontains=query) |
+                Q(Rol__icontains=query)
+        ).distinct()
+    #Paginator
+    paginator = Paginator(lista_vendedores, 20)
+    page = request.GET.get('page')
+    try:
+        vendedores = paginator.page(page)
+    except PageNotAnInteger:
+        vendedores = paginator.page(1)
+    except EmptyPage:
+        vendedores = paginator.page(paginator.num_pages)
+    context = {'vendedores': vendedores,}
+    return render(request, 'comercial/lista_vendedores.html', context)
+
+
+class Contacto_AgenciaDelete(DeleteView):
+    model = Contacto_Agencia
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('lista_agencias')
+
+    def get_object(self, queryset=None):
+        """ Hook to ensure object owner is request.user """
+        contacto = super(Contacto_AgenciaDelete, self).get_object()
+        if not contacto.Atiende == self.request.user:
+            raise Http404
+        return contacto
 
 #------------------------------------ Views Clientes ------------------------------------#
 

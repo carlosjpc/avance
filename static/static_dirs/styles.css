@@ -126,3 +126,7 @@ ul {
   position: relative;
   margin-top: 33px;
 }
+.borrar {
+  color: red;
+  font-size: 10px;
+}

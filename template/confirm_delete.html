@@ -1,0 +1,10 @@
+{% extends "comercial/base_comercial.html" %}
+
+{% block AreaTrabajo %}
+
+<form action="" method="post">{% csrf_token %}
+    <p>Confirma que deseas borrar: "{{ object }}"?</p>
+    <input type="submit" value="Confirmar" />
+</form>
+
+{% endblock %}

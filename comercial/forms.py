@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.models import User
+from dal import autocomplete
 
 from comercial.models import (Cliente, Contacto_C, Agencia_Automotriz, Contacto_Agencia, Caso,
                             Direccion_Fiscal_Cliente, Interaccion, Anotacion, Cita)
@@ -174,10 +175,12 @@ class Caso_StatusForm(ModelForm):
         COTIZACION = 'cot'
         ESPERANDO_PAPELES = 'epa'
         ESPERANDO_APROBACION = 'eap'
+        PERDIDO = 'prd'
         if has_group(user, 'comercial_vendedor'):
             self.fields['Etapa'].choices = [(INTERES, 'Interes'),
                                             (COTIZACION, 'Cotizacion Enviada'),
-                                            (ESPERANDO_PAPELES, 'Esperando Papeles'),]
+                                            (ESPERANDO_PAPELES, 'Esperando Papeles'),
+                                            (PERDIDO, 'Perdido'),]
         elif has_group(user, 'comercial_backup'):
             self.fields['Etapa'].choices = [(ESPERANDO_PAPELES, 'Esperando Papeles'),
                                             (ESPERANDO_APROBACION, 'Esperando Aprobacion'),]

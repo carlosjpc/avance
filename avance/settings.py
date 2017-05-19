@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     #third party apps
     'crispy_forms',
+    'dal',
+    'dal_select2',
     #local apps
     'central',
     'admon',

@@ -12,10 +12,11 @@
     <h4>Colonia: {{ agencia.Colonia }}</h4>
     <h4>Telefono: {{ agencia.Telefono }}</h4>
     {% if agencia.URL %}
-      <h4>URL: {{ agencia.URL }}</h4>
+      <h4><a href="{{agencia.URL}}">Link Google Maps</a></h4>
     {% endif %}
     <h4>Atiende: {{ agencia.Atiende }}</h4>
-    <a href="{% url 'actualizar_agencia' pk=agencia.pk %}">Editar agencia</a>
+    <p><a href="{% url 'actualizar_agencia' pk=agencia.pk %}">Editar agencia</a></p>
+    <a class="borrar" href="{% url 'borrar_agencia' pk=agencia.pk %}">borrar agencia</a>
     <hr></br>
     {% for cuenta in cuentas %}
       <p><a href="">{{ cuenta }}</a></p>
@@ -25,22 +26,29 @@
   <div class="col-sm-5 col-sm-offset-1">
     <h4>Contactos en Agencia:</h4>
     {% for contacto in contactos %}
-      <p>
-        {% if contacto.get_Rol_display == 'Vendedor' %}
-          <a href="{% url 'lista_casos_vendedor_agencia' pk=contacto.pk %}">{{ contacto }}</a>
-        {% else %}
-          {{ contacto }}
+    <div class="borde-inferior">
+        <p>
+          {% if contacto.get_Rol_display == 'Vendedor' %}
+            <a href="{% url 'lista_casos_vendedor_agencia' pk=contacto.pk %}">{{ contacto }}</a>
+          {% else %}
+            {{ contacto }}
+          {% endif %}
+          / {{ contacto.get_Rol_display }}
+        </p>
+        <p>Email: <a href="mailto:{{ contacto.Email }}">{{ contacto.Email }}</a></p>
+        {% if contacto.Celular %}
+          <p>Celular: {{ contacto.Celular }}</p>
         {% endif %}
-        / {{ contacto.get_Rol_display }}
-      </p>
-      <p>Email: <a href="mailto:{{ contacto.Email }}">{{ contacto.Email }}</a></p>
-      {% if contacto.Celular %}
-        <p>Celular: {{ contacto.Celular }}</p>
-      {% endif %}
-      <a href="{% url 'editar_contacto_agencia' pk=contacto.pk %}">Editar contacto</a>
-      <p></p>
+        <p>
+          <a href="{% url 'editar_contacto_agencia' pk=contacto.pk %}">Editar contacto</a>
+          &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+          &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+          <a class="borrar" href="{% url 'borrar_contacto_agencia' pk=contacto.pk %}">borrar contacto</a>
+        </p>
+        <p></p>
+      </div>
     {% empty %}
-      <p>No se han agregado contactos para esta agencia.</p>
+      <p>No se han agregado contactos para este cliente.</p>
     {% endfor %}
     </br>
     <p><a href="{% url 'nuevo_contacto_agencia' pk=agencia.pk %}">Agregar Contacto</a></p>

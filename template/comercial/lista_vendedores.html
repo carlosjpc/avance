@@ -1,0 +1,33 @@
+{% extends "comercial/base_comercial.html" %}
+
+
+{% block AreaTrabajo %}
+
+<div class="row">
+  <div class="col-sm-7 col-sm-offset-2">
+    <h2>{{ titulo }}</h2>
+    <form method='GET' action=''>
+      <input type='text' name='q' placeholder='Buscador Vendedores' value='{{ request.GET.q }}'/>
+      <input type='submit' value='Buscar'/>
+    </form>
+    {% for vendedor in vendedores %}
+      <h4><a href="">{{ vendedor }}</a></h4>
+    {% endfor %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if vendedores.has_previous %}
+                <a href="?page={{ vendedores.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Pagina {{ vendedores.number }} de {{ vendedores.paginator.num_pages }}.
+            </span>
+
+            {% if vendedores.has_next %}
+                <a href="?page={{ vendedores.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
+            {% endif %}
+        </span>
+    </div>
+  </div>
+</div>
+{% endblock %}

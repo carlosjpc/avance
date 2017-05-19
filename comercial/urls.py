@@ -1,7 +1,9 @@
 from __future__ import unicode_literals
 from django.conf.urls import url, include
+from dal import autocomplete
 
 from comercial import views
+from comercial.views import (AgenciaDelete, Contacto_AgenciaDelete, CasoDelete)
 
 urlpatterns = [
     #index / comercial user
@@ -22,9 +24,13 @@ urlpatterns = [
     url(r'^nueva_agencia/$', views.nueva_agencia, name="nueva_agencia"),
     url(r'^lista_agencias/$', views.lista_agencias, name="lista_agencias"),
     url(r'^actualizar_agencia/(?P<pk>[0-9]+)/$', views.actualizar_agencia, name="actualizar_agencia"),
+    url(r'^borrar_agencia/(?P<pk>[0-9]+)/$', AgenciaDelete.as_view(), name="borrar_agencia"),
     url(r'^detalle_agencia/(?P<pk>[0-9]+)/$', views.detalle_agencia, name="detalle_agencia"),
+    #Contacto Agencia
     url(r'^nuevo_contacto_agencia/(?P<pk>[0-9]+)/$', views.nuevo_contacto_agencia, name="nuevo_contacto_agencia"),
     url(r'^editar_contacto_agencia/(?P<pk>[0-9]+)/$', views.editar_contacto_agencia, name="editar_contacto_agencia"),
+    url(r'^borrar_contacto_agencia/(?P<pk>[0-9]+)/$', Contacto_AgenciaDelete.as_view(), name="borrar_contacto_agencia"),
+    url(r'^lista_vendedores_agencia/$', views.lista_vendedores_agencia, name="lista_vendedores_agencia"),
     url(r'^lista_casos_vendedor_agencia/(?P<pk>[0-9]+)/$', views.lista_casos_vendedor_agencia, name="lista_casos_vendedor_agencia"),
     #Caso urls
     url(r'^nuevo_caso/(?P<pk_cliente>[0-9]+)/(?P<pk_atiende>[0-9]+)/$', views.nuevo_caso , name="nuevo_caso"),
@@ -32,6 +38,7 @@ urlpatterns = [
     url(r'^detalle_caso/(?P<pk>[0-9]+)/$', views.detalle_caso, name="detalle_caso"),
     url(r'^solicitar_revision/$', views.solicitar_revision, name="solicitar_revision"),
     url(r'^revision_realizada/$', views.revision_realizada, name="revision_realizada"),
+    url(r'^borrar_caso/(?P<pk>[0-9]+)/$', CasoDelete.as_view(), name="borrar_caso"),
     #Interacciones urls
     url(r'^agregar_interaccion/(?P<pk_caso>[0-9]+)/$', views.agregar_interaccion , name="agregar_interaccion"),
     #Anotaciones urls
