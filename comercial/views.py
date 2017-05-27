@@ -290,6 +290,10 @@ def detalle_caso(request, pk):
     else:
         caso = Caso.objects.get(pk=pk)
     try:
+        comprador = Contacto_C.objects.filter(Cliente=caso.Cliente.pk, Rol='CM').order_by('-id')[0]
+    except IndexError:
+        comprador = None
+    try:
         historial = Historial_Etapa.objects.filter(Caso=caso).order_by('-Fecha')
     except ObjectDoesNotExist:
         pass
@@ -336,6 +340,16 @@ def agregar_interaccion(request, pk_caso):
             if nuevo_caso_status.tracker.has_changed('Etapa'):
                 historial = Historial_Etapa(Caso=caso, Etapa=nuevo_caso_status.Etapa)
                 historial.save()
+                if nuevo_caso_status.Etapa == 'prd':
+                    nuevo_caso_status.Activo = False
+                    casos_cliente = Caso.objects.filter(Cliente=caso.Cliente)
+                    x = casos_cliente.count() - 1
+                    if casos_cliente.filter(Q(Etapa='prd') | Q(Etapa='rzo')).count() == x:
+                        cliente = Cliente.objects.get(pk=caso.Cliente.pk)
+                        cliente.Status = 'PF'
+                        cliente.save()
+                elif nuevo_caso_status.Etapa == 'rzo':
+                    nuevo_caso_status.Activo = False
             else:
                 historial = Historial_Etapa.objects.filter(Caso=caso).latest('Fecha')
             nueva_interaccion.Hist_Etapa = historial
@@ -490,7 +504,7 @@ def detalle_agencia(request, pk):
     elif user.groups.filter(name='comercial_mger').exists() or user.groups.filter(name='comercial_backup').exists():
         agencia = get_object_or_404(Agencia_Automotriz, pk=pk)
     try:
-        contactos = Contacto_Agencia.objects.filter(Agencia=agencia).order_by('Nombre_del_Contacto')
+        contactos = Contacto_Agencia.objects.filter(Agencia=agencia).order_by('Rol', 'Nombre_del_Contacto')
     except ObjectDoesNotExist:
         pass
     try:
@@ -596,7 +610,6 @@ def lista_vendedores_agencia(request):
         vendedores = paginator.page(paginator.num_pages)
     context = {'vendedores': vendedores,}
     return render(request, 'comercial/lista_vendedores.html', context)
-
 
 class Contacto_AgenciaDelete(DeleteView):
     model = Contacto_Agencia
@@ -808,6 +821,15 @@ def editar_contacto(request, pk):
             return render(request, 'comercial/form.html', {'form': contactoform,})
     return render(request, 'comercial/form.html', {'form': contactoform,})
 
+@login_required
+def detalle_contacto(request, pk):
+    user = request.user
+    if user.groups.filter(name='comercial_vendedor').exists():
+        contacto = Contacto_C.objects.get(pk=pk, Atiende=user)
+    else:
+        contacto = Contacto_C.objects.get(pk=pk)
+    return render(request, 'comercial/detalle_contacto_cliente.html', {'contacto': contacto,})
+
 #------------------------------------ Views Direccion clientes ------------------------------------#
 
 @login_required
@@ -929,8 +951,8 @@ def calendario_t(request, ano, mes):
                                 Fecha__month=fecha.month).order_by('Fecha')
     seguimientos = Interaccion.objects.filter(Hecha_por=request.user, Buscar_el__year=fecha.year,
                                               Buscar_el__month=fecha.month).order_by('Buscar_el')
-    casos = Caso.objects.filter(Atiende=request.user, Buscar_el__year=hoy.year,
-                                Buscar_el__month=hoy.month, Activo=True).order_by('Buscar_el')
+    casos = Caso.objects.filter(Atiende=request.user, Buscar_el__year=fecha.year,
+                                Buscar_el__month=fecha.month, Activo=True).order_by('Buscar_el')
     mis_citas = list(chain(citas, seguimientos, casos))
     cal = AgendaCalendar(mis_citas).formatmonth(fecha.year, fecha.month)
     next_month = fecha + relativedelta(months=+1)
@@ -945,10 +967,15 @@ def detalle_cita(request):
     if cita_pk:
         cita = get_object_or_404(Cita, pk=int(cita_pk))
         if cita.Cliente:
+            try:
+                comprador = Contacto_C.objects.filter(Cliente=cita.Cliente.pk, Rol='CM').order_by('-id')[0]
+            except IndexError:
+                comprador = None
             url = cita.Cliente.get_absolute_url()
             return HttpResponse('<p><a href="' + url + '">' + cita.Cliente.Nombre_Empresa + '</a></p>'
                                 '<p>Descripcion: ' + cita.Descripcion + '</p>'
-                                '<p>El ' + str(cita.Fecha) + ' a las: ' + str(cita.Hora) + '</p>')
+                                '<p>El ' + str(cita.Fecha) + ' a las: ' + str(cita.Hora) + '</p>'
+                                '<p>' + comprador.Nombre_del_Contacto + ' | ' + comprador.Celular + ' | <a href="mailto:' + comprador.Email + '">' + comprador.Email + '</a></p>')
         elif cita.Agencia:
             url = cita.Agencia.get_absolute_url()
             return HttpResponse('<p><a href="' + url + '">' + cita.Agencia.get_Marca_display() + ' | ' + cita.Agencia.Colonia + '</a></p>'
@@ -959,16 +986,26 @@ def detalle_interaccion(request):
     inte_pk = request.GET.get('inte_pk', None)
     if inte_pk:
         inte = get_object_or_404(Interaccion, pk=int(inte_pk))
+        try:
+            comprador = Contacto_C.objects.filter(Cliente=inte.del_Caso.Cliente.pk, Rol='CM').order_by('-id')[0]
+        except IndexError:
+            comprador = None
         url_cliente = inte.del_Caso.Cliente.get_absolute_url()
         url_caso = inte.del_Caso.get_absolute_url()
         return HttpResponse('<p><a href="' + url_cliente + '">' + inte.del_Caso.Cliente.Nombre_Empresa + '</a></p>'
-                            '<p><a href="' + url_caso + '">' + inte.Descripcion + '</a></p>')
+                            '<p><a href="' + url_caso + '">' + inte.Descripcion + '</a></p>'
+                            '<p>' + comprador.Nombre_del_Contacto + ' | ' + comprador.Celular + ' | <a href="mailto:' + comprador.Email + '">' + comprador.Email + '</a></p>')
     return HttpResponse('Error')
 
 def detalle_caso_calendario(request):
     caso_pk = request.GET.get('caso_pk', None)
     if caso_pk:
         caso = get_object_or_404(Caso, pk=int(caso_pk))
+        try:
+            comprador = Contacto_C.objects.filter(Cliente=caso.Cliente.pk, Rol='CM').order_by('-id')[0]
+        except IndexError:
+            comprador = None
         url_cliente = caso.Cliente.get_absolute_url()
-        return HttpResponse('<p><a href="' + url_cliente + '">' + caso.Cliente.Nombre_Empresa + '</a></p>')
+        return HttpResponse('<p><a href="' + url_cliente + '">' + caso.Cliente.Nombre_Empresa + '</a></p>'
+                            '<p>' + comprador.Nombre_del_Contacto + ' | ' + comprador.Celular + ' | <a href="mailto:' + comprador.Email + '">' + comprador.Email + '</a></p>')
     return HttpResponse('Error')

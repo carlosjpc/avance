@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
@@ -10,8 +11,8 @@ from django.db.models import Q
 from datetime import datetime, timedelta
 
 #internal imports
-
-
+from central.models import Contrato, Anexo, Modificatorio, Factura, Poliza_Seguro, Documentacion_PMoral
+from comercial.models import Cliente
 
 # Create your views here.
 
@@ -33,3 +34,26 @@ def nuevo_usuario(request, tipo):
             return HttpResponseRedirect(url)
     userform = UserForm()
     return render(request, 'central/create_user.html', {'userform': userform,})
+
+@login_required
+def contrato_maestro_pdf(request):
+    #cliente = Cliente.objects.get(pk=pk_cliente)
+    response = HttpResponse(content_type='application/pdf')
+    x = 1
+    pdf_name = "contrato_maestro_" + str(x) + ".pdf"
+    buff = BytesIO()
+    doc = SimpleDocTemplate(buff,
+                            pagesize=letter,
+                            rightMargin=40,
+                            leftMargin=40,
+                            topMargin=60,
+                            bottomMargin=18,
+                            )
+    contrato = []
+    styles = getSampleStyleSheet()
+    header = Paragraph("CONTRATO MAESTRO DE ARRENDAMIENTO DE EQUIPO", styles['Heading1'])
+    contrato.append(header)
+    doc.build(contrato)
+    response.write(buff.getvalue())
+    buff.close()
+    return response

@@ -39,7 +39,7 @@ class Anexo(models.Model):
         unique_together = ('Num_Anexo', 'Contrato',)
 
     def __str__(self):
-        return 'Anexo #: ' + str(self.Num_Anexo) + 'a contrato #: ' + str(self.Contrato.Num_Contrato) + ' de ' + self.Cliente.Empresa
+        return 'Anexo #: ' + str(self.Num_Anexo) + 'a contrato #: ' + str(self.Contrato.Num_Contrato) + ' de ' + self.Cliente.Nombre_Empresa
 
 class Modificatorio(models.Model):
     A_Contrato = models.ForeignKey(Contrato, on_delete=models.CASCADE, blank=True)
@@ -48,7 +48,29 @@ class Modificatorio(models.Model):
     Scan_Modificatorio = models.FileField(upload_to=None, max_length=100, blank=True, null=True)
 
     def __str__(self):
-        return 'Modificatorio a anexo: #' + str(self.Para_Anexo.Num_Anexo) + ' Cliente: ' + self.Para_Anexo.Cliente.Empresa
+        return 'Modificatorio a anexo: #' + str(self.Para_Anexo.Num_Anexo) + ' Cliente: ' + self.Para_Anexo.Cliente.Nombre_Empresa
+
+class Poliza_Seguro(models.Model):
+    abba = 'AB'
+    maphre = 'MA'
+    gnp = 'GN'
+    hdi = 'HD'
+    anna = 'AN'
+    insurance_choices = (
+        (abba, 'ABBA'),
+        (maphre, 'MAPHRE'),
+        (gnp, 'GNP'),
+        (hdi, 'HDI'),
+        (anna, 'ANNA'),
+    )
+    Aseguradora = models.CharField(max_length=2, choices=insurance_choices, default=abba)
+    Num_Poliza = models.PositiveIntegerField()
+    Poliza_Fecha_Inicio = models.DateField(blank=True)
+    Poliza_Fecha_Final = models.DateField(blank=True)
+    Scan_Poliza = models.FileField(upload_to=None, max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return 'Poliza: #' + str(self.Num_Poliza) + ' | ' + self.get_Aseguradora_display()
 
 class Factura(models.Model):
     VEHICULO_PARTICULAR = 'VP'
@@ -67,18 +89,6 @@ class Factura(models.Model):
         (MAQUINA, 'maquinas'),
         (OTROS, 'otros'),
     )
-    abba = 'AB'
-    maphre = 'MA'
-    gnp = 'GN'
-    hdi = 'HD'
-    anna = 'AN'
-    insurance_choices = (
-        (abba, 'ABBA'),
-        (maphre, 'MAPHRE'),
-        (gnp, 'GNP'),
-        (hdi, 'HDI'),
-        (anna, 'ANNA'),
-    )
     #info factura
     Num_Factura = models.PositiveIntegerField()
     Monto_Factura = models.PositiveIntegerField()
@@ -90,12 +100,8 @@ class Factura(models.Model):
     Cliente = models.ForeignKey(comercial_models.Cliente, blank=True, related_name="arrendatario")
     Anexo = models.ForeignKey(Anexo, blank=True)
     Tipo_Activo = models.CharField(max_length=3, choices=capital_choices, default=VEHICULO_PARTICULAR)
-    #info seguro
-    Aseguradora = models.CharField(max_length=2, choices=insurance_choices, default=abba)
-    Num_Poliza = models.PositiveIntegerField()
-    Poliza_Fecha_Inicio = models.DateField(blank=True)
-    Poliza_Fecha_Final = models.DateField(blank=True)
-    Scan_Poliza = models.FileField(upload_to=None, max_length=100, blank=True, null=True)
+    #Poliza Seguro
+    Poliza = models.ForeignKey(Poliza_Seguro, blank=True, null=True)
 
     class Meta:
         unique_together = ('Num_Factura', 'Cliente', 'Anexo',)

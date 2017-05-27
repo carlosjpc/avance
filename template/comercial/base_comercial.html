@@ -42,6 +42,7 @@
       {% if request.user|has_group:"comercial_vendedor" or request.user|has_group:"comercial_mger" %}
         <li><a href="{% url 'lista_clientes' vendedor_pk='000' status='AL' tipo='S' %}">Nuevo Caso</a></li>
       {% endif %}
+        <li><a href="">Lista Casos</a></li>
     </ul>
   </li>
   <li>

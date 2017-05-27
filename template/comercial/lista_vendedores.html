@@ -1,8 +1,6 @@
 {% extends "comercial/base_comercial.html" %}
 
-
 {% block AreaTrabajo %}
-
 <div class="row">
   <div class="col-sm-7 col-sm-offset-2">
     <h2>{{ titulo }}</h2>
@@ -11,7 +9,26 @@
       <input type='submit' value='Buscar'/>
     </form>
     {% for vendedor in vendedores %}
-      <h4><a href="">{{ vendedor }}</a></h4>
+      <h4 class="vendedor">{{ vendedor }}</h4>
+      <div class="dp-n vendedor-info">
+        <div class="row">
+          <div class="col-sm-2">
+            <p>{{ vendedor.Agencia.get_Marca_display }}</p>
+          </div>
+          <div class="col-sm-3">
+            <p>{{ vendedor.Agencia.Colonia }}</p>
+          </div>
+          <div class="col-sm-3">
+            <p>{{ vendedor.get_Rol_display }}</p>
+          </div>
+          <div class="col-sm-3">
+            <p><a href="mailto:{{ vendedor.Email }}" target="_top">{{ vendedor.Email }}</a></p>
+            {% if vendedor.Celular %}
+            <p>{{ vendedor.Celular }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
     {% endfor %}
     <div class="pagination">
         <span class="step-links">
@@ -30,4 +47,12 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+$('.vendedor').click( function() {
+  $(this).next('.vendedor-info').slideToggle();
+});
+</script>
 {% endblock %}

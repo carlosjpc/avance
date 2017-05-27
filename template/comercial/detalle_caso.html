@@ -7,6 +7,10 @@
   <a href="{% url 'detalle_cliente' pk=caso.Cliente.pk %}">{{ caso.Cliente.Nombre_Empresa }}</a>
   {{ caso.Descripcion }}
 </h3>
+{% if comprador %}
+  <p>{{ comprador.Nombre_del_Contacto }} {{ comprador.Celular }} | <a href="mailto:{{comprador.Email}}">{{ comprador.Email }}</a></p>
+  </br>
+{% endif %}
 <div class="row">
   <div class="col-sm-3 col-sm-offset-1">
     {% if request.user|has_group:"comercial_vendedor" or request.user|has_group:"comercial_mger" %}

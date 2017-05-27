@@ -1,4 +1,5 @@
 {% extends "comercial/base_comercial.html" %}
+{% load comercial_tags %}
 
 {% block AreaTrabajo %}
 <div class="row">
@@ -18,7 +19,9 @@
     </h4>
     <h4>Es: {{ cliente.get_Tipo_Negocio_display }}</h4>
     <h4>Industria: {{ cliente.Industria }}</h4>
-    <h4>Lo atiende: {{ cliente.Atiende }}</h4>
+    {% if not request.user|has_group:"comercial_vendedor" %}
+      <h4>Lo atiende: {{ cliente.Atiende }}</h4>
+    {% endif %}  
     <h4>Su status es: {{ cliente.get_Status_display }}</h4>
     <a href="{% url 'editar_cliente' pk=cliente.pk %}">Editar cliente</a>
   </div>
