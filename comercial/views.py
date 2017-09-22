@@ -1458,13 +1458,11 @@ def comparativa_arr(request):
                 vr_av = 0.14
             else:
                 vr_av = 0.05
-            renta_av = int(((monto*(1-vr_av))/((1-(1+fc/12)**(-1*plazo)) /
-                            (fc/12))+50)/1.16)
-            deduc_renta_av = int(renta_av*0.45+6000)
+            renta_av = int(privet_info)
+            deduc_renta_av = int(privet_info)
             if deduc_renta_av > renta_av:
                 deduc_renta_av = renta_av
-            pago_ini_av = int(((monto-(ap_adicional*0.75))*0.05 +
-                               renta_av*2*1.16+ap_adicional)/1.16)
+            pago_ini_av = int(privet_info)
             vr_avance = int((monto*vr_av)/1.16)
             mnod_av = int((renta_av-deduc_renta_av)*(plazo-1) + vr_avance)
             mnod = int((renta-deduccion_mensual)*(plazo-r_en_pi) + vr +
