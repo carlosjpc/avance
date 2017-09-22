@@ -13,7 +13,7 @@
     <h4>Colonia: {{ agencia.Colonia }}</h4>
     <h4>Telefono: {{ agencia.Telefono }}</h4>
     {% if agencia.URL %}
-      <h4><a href="{{agencia.URL}}">Link Google Maps</a></h4>
+      <h4><a href="{{agencia.URL}}" target="_blank">Link Google Maps</a></h4>
     {% endif %}
     {% if not request.user|has_group:"comercial_vendedor" %}
       <h4>Atiende: {{ agencia.Atiende }}</h4>
@@ -21,8 +21,16 @@
     <p><a href="{% url 'actualizar_agencia' pk=agencia.pk %}">Editar agencia</a></p>
     <a class="borrar" href="{% url 'borrar_agencia' pk=agencia.pk %}">borrar agencia</a>
     <hr></br>
+    <p><a href="{% url 'lista_casos_agencia' pk=agencia.pk %}">Ver los casos de esta agencia</a></p></br>
     {% for cuenta in cuentas %}
-      <p><a href="">{{ cuenta }}</a></p>
+      <p>{{ cuenta.get_Banco_display }}; Cve. {{ cuenta.Num_Cuenta }}</p>
+      <p>Clave Interbancaria: {{ cuenta.Clave_Interbancaria }}</p>
+      <p>
+        <a href="{% url 'editar_cuentab_agencia' pk=cuenta.pk %}">Editar cuenta</a>
+        &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+        <a class="borrar" href="">borrar cuenta</a>
+      </p>
+      </br></br>
     {% endfor %}
     <p><a href="{% url 'nueva_cuenta_bancaria_agencia' pk=agencia.pk %}">Agregar Cuenta Bancaria</a></p>
   </div>

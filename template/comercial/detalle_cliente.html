@@ -21,7 +21,7 @@
     <h4>Industria: {{ cliente.Industria }}</h4>
     {% if not request.user|has_group:"comercial_vendedor" %}
       <h4>Lo atiende: {{ cliente.Atiende }}</h4>
-    {% endif %}  
+    {% endif %}
     <h4>Su status es: {{ cliente.get_Status_display }}</h4>
     <a href="{% url 'editar_cliente' pk=cliente.pk %}">Editar cliente</a>
   </div>

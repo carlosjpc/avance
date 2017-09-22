@@ -7,7 +7,7 @@
     {% for caso in casos %}
       <p><a href="{% url 'detalle_caso' pk=caso.pk %}">{{ caso }}</a></p>
     {% empty %}
-      <p>Este vendedor no ha proporcionado un caso.</p>  
+      <p>Sin casos.</p>
     {% endfor %}
     <div class="pagination">
         <span class="step-links">

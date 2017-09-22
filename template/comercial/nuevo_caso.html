@@ -1,0 +1,47 @@
+{% extends "comercial/base_comercial.html" %}
+{% load crispy_forms_tags %}
+
+{% block AreaTrabajo %}
+<div class="col-sm-12">
+  <form method='POST' action=''>
+    {% csrf_token %}
+    </br>
+    <div class="col-sm-5">
+      <h3>Origen del Caso:</h3></br>
+      {{ form|crispy }}
+      </br></br>
+    </div>
+    <div class="col-sm-5 col-sm-offset-1">
+      <h3>Detalle de lo requerido:</h3></br>
+      {{ Eq_Solicitado_FormSet.management_form }}
+      <div id="form_set">
+        {% for form in Eq_Solicitado_FormSet %}
+          {{ form|crispy }}
+        </br>
+        {% endfor %}
+      </div>
+      </br><input type="button" value="Agregar Otro" id="add_more" class="flt-r">
+      </br><hr/>
+      <input type='submit' value='Siguiente'><p></p></br></br>
+      <div id="empty_form" style="display:none">
+        <table class='eq_tabla'>
+          {{ Eq_Solicitado_FormSet.empty_form|crispy }}
+        </table>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+  $(document).ready(function() {
+      $('.dateinput').datepicker({ format: "yyyy/mm/dd" });
+  });
+  $('#add_more').click(function(){
+       var form_idx = $('#id_form-TOTAL_FORMS').val();
+       $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+       $('#form_set').append('</br>');
+       $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+  });
+</script>
+{% endblock %}

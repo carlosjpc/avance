@@ -3,14 +3,14 @@
 {% block AreaTrabajo %}
 </br></br>
 <div class="col-sm-12 col-xs-12">
-  {% for caso in lista_casos_crd %}
+  {% for hist in lista_casos_crd %}
     <div class="row cerrado">
       <div class="row">
         <div class="col-sm-9">
-          <h4 class="h4_ctrl_panel_vendedor">{{ caso }}</h4>
+          <h4 class="h4_ctrl_panel_vendedor">{{ hist.Caso.Cliente.Nombre_Empresa }} | Cerrado</h4>
         </div>
         <div class="col-sm-3">
-          </br><a href="{% url 'detalle_caso' pk=caso.pk %}">detalle caso</a>
+        </br><a href="{% url 'detalle_caso' pk=hist.Caso.pk %}">detalle caso</a>
         </div>
       </div>
     </div>
@@ -39,6 +39,84 @@
           <hr>
           <div class="col-sm-11 col-sm-offset-1">
             {% for anotacion in lista_anotacion_apr %}
+              {% if anotacion.al_Caso == caso %}
+                <p>Anotacion mas reciente: </p>
+                <h4> {{ anotacion.Requerimiento }} </h4>
+                <p>Hecha por: {{ anotacion.Hecha_por }}</p>
+              {% endif %}
+            {% empty %}
+              <p>No hay notaciones a este caso.</p>
+            {% endfor %}
+            <button data-id="{{ caso.pk }}" type="button">Solicitar Revision</button>
+            </br></br>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  {% for caso in lista_casos_pir %}
+    <div class="row aprobado {% if caso.Requiere_revision_vtas == True %} attn-req {% endif %}">
+      <div class="row info-caso">
+        <div class="col-sm-9">
+          <h4 class="h4_ctrl_panel_vendedor">{{ caso }}</h4>
+        </div>
+        <div class="col-sm-3">
+          </br><a href="{% url 'detalle_caso' pk=caso.pk %}">detalle caso</a>
+        </div>
+      </div>
+      <div class="col-sm-12 dp-n opciones-caso">
+        <div class="col-sm-3">
+          <p><a class="agregar_int" href="{% url 'agregar_interaccion' pk_caso=caso.pk %}">Interaccion</a></p>
+        </div>
+        <div class="col-sm-3 col-sm-offset-1">
+          <a class="que_sigue">¿Que Sige?</a>
+        </div>
+        <div class="col-sm-3 col-xs-offset-1">
+        </div>
+        </br></br></br>
+        <div class="row anotacion dp-n">
+          <hr>
+          <div class="col-sm-11 col-sm-offset-1">
+            {% for anotacion in lista_anotacion_pir %}
+              {% if anotacion.al_Caso == caso %}
+                <p>Anotacion mas reciente: </p>
+                <h4> {{ anotacion.Requerimiento }} </h4>
+                <p>Hecha por: {{ anotacion.Hecha_por }}</p>
+              {% endif %}
+            {% empty %}
+              <p>No hay notaciones a este caso.</p>
+            {% endfor %}
+            <button data-id="{{ caso.pk }}" type="button">Solicitar Revision</button>
+            </br></br>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  {% for caso in lista_casos_cfr %}
+    <div class="row aprobado {% if caso.Requiere_revision_vtas == True %} attn-req {% endif %}">
+      <div class="row info-caso">
+        <div class="col-sm-9">
+          <h4 class="h4_ctrl_panel_vendedor">{{ caso }}</h4>
+        </div>
+        <div class="col-sm-3">
+          </br><a href="{% url 'detalle_caso' pk=caso.pk %}">detalle caso</a>
+        </div>
+      </div>
+      <div class="col-sm-12 dp-n opciones-caso">
+        <div class="col-sm-3">
+          <p><a class="agregar_int" href="{% url 'agregar_interaccion' pk_caso=caso.pk %}">Interaccion</a></p>
+        </div>
+        <div class="col-sm-3 col-sm-offset-1">
+          <a class="que_sigue">¿Que Sige?</a>
+        </div>
+        <div class="col-sm-3 col-xs-offset-1">
+        </div>
+        </br></br></br>
+        <div class="row anotacion dp-n">
+          <hr>
+          <div class="col-sm-11 col-sm-offset-1">
+            {% for anotacion in lista_anotacion_cfr %}
               {% if anotacion.al_Caso == caso %}
                 <p>Anotacion mas reciente: </p>
                 <h4> {{ anotacion.Requerimiento }} </h4>
@@ -89,6 +167,18 @@
             <button data-id="{{ caso.pk }}" type="button">Solicitar Revision</button>
             </br></br>
           </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  {% for rechazado in rechazados %}
+    <div class="row rechazado">
+      <div class="row">
+        <div class="col-sm-9">
+          <h4 class="h4_ctrl_panel_vendedor">{{ rechazado.Caso.Cliente.Nombre_Empresa }} | Rechazado</h4>
+        </div>
+        <div class="col-sm-3">
+        </br><a href="{% url 'detalle_caso' pk=rechazado.Caso.pk %}">detalle caso</a>
         </div>
       </div>
     </div>

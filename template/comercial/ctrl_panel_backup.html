@@ -28,8 +28,39 @@
         <div class="col-sm-3 col-sm-offset-1">
           <p><a class="agregar_int" href="{% url 'agregar_anotacion' pk_caso=caso.pk %}">Anotacion</a></p>
         </div>
-        <div class="col-sm-5 col-sm-offset-1">
-          <a class="que_sigue">opcion</a>
+      </div>
+    </div>
+  {% endfor %}
+  {% for caso in lista_casos_pir %}
+    <div class="row aprobado {% if caso.Requiere_revision_admon == True %} attn-req {% endif %}">
+      <div class="row info-caso">
+        <div class="col-sm-9">
+          <h4 class="h4_ctrl_panel_vendedor">{{ caso }}</h4>
+        </div>
+        <div class="col-sm-3">
+          </br><a href="{% url 'detalle_caso' pk=caso.pk %}">detalle caso</a>
+        </div>
+      </div>
+      <div class="col-sm-12 dp-n opciones-caso">
+        <div class="col-sm-3 col-sm-offset-1">
+          <p><a class="agregar_int" href="{% url 'agregar_anotacion' pk_caso=caso.pk %}">Anotacion</a></p>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  {% for caso in lista_casos_cfr %}
+    <div class="row aprobado {% if caso.Requiere_revision_admon == True %} attn-req {% endif %}">
+      <div class="row info-caso">
+        <div class="col-sm-9">
+          <h4 class="h4_ctrl_panel_vendedor">{{ caso }}</h4>
+        </div>
+        <div class="col-sm-3">
+          </br><a href="{% url 'detalle_caso' pk=caso.pk %}">detalle caso</a>
+        </div>
+      </div>
+      <div class="col-sm-12 dp-n opciones-caso">
+        <div class="col-sm-3 col-sm-offset-1">
+          <p><a class="agregar_int" href="{% url 'agregar_anotacion' pk_caso=caso.pk %}">Anotacion</a></p>
         </div>
       </div>
     </div>
@@ -48,38 +79,43 @@
         <div class="col-sm-3 col-sm-offset-1">
           <p><a class="agregar_int" href="{% url 'agregar_anotacion' pk_caso=caso.pk %}">Anotacion</a></p>
         </div>
-        <div class="col-sm-5 col-sm-offset-1">
-          <a class="que_sigue">opcion</a>
+        <div class="col-sm-3 col-sm-offset-1">
+          <p><a class="que_sigue" href="{% url 'generar_oc' pk_caso=caso.pk %}">Generar OC</a></p>
+        </div>
+        <div class="col-sm-3 col-sm-offset-1">
+          <p><a class="que_sigue" href="">Registrar Factura</a></p>
         </div>
       </div>
     </div>
   {% endfor %}
-  {% for caso in lista_casos_eap %}
+  {% for casos_eap, documentacion_eap in listas_eap %}
     <div class="row epe {% if caso.Requiere_revision_admon == True %} attn-req {% endif %}">
       <div class="row info-caso">
         <div class="col-sm-9">
-          <h4 class="h4_ctrl_panel_vendedor">{{ caso }}</h4>
+          <h4 class="h4_ctrl_panel_vendedor">{{ casos_eap }}</h4>
         </div>
         <div class="col-sm-3">
-          </br><a href="{% url 'detalle_caso' pk=caso.pk %}">detalle caso</a>
+          </br><a href="{% url 'detalle_caso' pk=casos_eap.pk %}">detalle caso</a>
         </div>
       </div>
       <div class="col-sm-12 dp-n opciones-caso">
         <div class="col-sm-3 col-sm-offset-1">
-          <p><a class="agregar_int" href="{% url 'agregar_anotacion' pk_caso=caso.pk %}">Anotacion</a></p>
+          <p><a class="agregar_int" href="{% url 'agregar_anotacion' pk_caso=casos_eap.pk %}">Anotacion</a></p>
         </div>
         <div class="col-sm-3 col-sm-offset-1">
-          {% if caso.Cliente.Persona_Moral == True %}
-            <a class="que_sigue" href="{% url 'actualizar_documentacion_caso' pk=documentacion_int.pk %}">Editar Docs</a>
-          {% else %}
-            <a class="que_sigue" href="">Editar Docs PF</a>
+          {% if documentacion_eap %}
+            {% if casos_eap.Cliente.Persona_Moral == True %}
+              <a class="que_sigue" href="{% url 'actualizar_documentacion_caso' pk=documentacion_eap.pk tipo='M' %}">Editar Docs</a>
+            {% else %}
+              <a class="que_sigue" href="{% url 'actualizar_documentacion_caso' pk=documentacion_eap.pk tipo='F' %}">Editar Docs PF</a>
+            {% endif %}
           {% endif %}
         </div>
       </div>
     </div>
   {% endfor %}
   {% for casos_epa, documentacion_epa in listas_epa %}
-    <div class="row eap {% if caso_epa.Requiere_revision_admon == True %} attn-req {% endif %}">
+    <div class="row eap {% if casos_epa.Requiere_revision_admon == True %} attn-req {% endif %}">
       <div class="row info-caso">
         <div class="col-sm-9">
           <h4 class="h4_ctrl_panel_vendedor">{{ casos_epa }}</h4>
@@ -95,23 +131,19 @@
         <div class="col-sm-3 col-sm-offset-1">
           {% if documentacion_epa %}
             {% if casos_epa.Cliente.Persona_Moral == True %}
-              <a class="que_sigue" href="{% url 'actualizar_documentacion_caso' pk=documentacion_epa.pk %}">Editar Docs</a>
+              <a class="que_sigue" href="{% url 'actualizar_documentacion_caso' pk=documentacion_epa.pk tipo='M' %}">Editar Docs</a>
             {% else %}
-              <a class="que_sigue" href="">Editar Docs PF</a>
+              <a class="que_sigue" href="{% url 'actualizar_documentacion_caso' pk=documentacion_epa.pk tipo='F' %}">Editar Docs PF</a>
             {% endif %}
           {% else %}
-            {% if casos_epa.Cliente.Persona_Moral == True %}
-              <a class="que_sigue" href="{% url 'nueva_documentacion_caso' pk_caso=casos_epa.pk %}">Crear Docs</a>
-            {% else %}
-              <a class="que_sigue" href="">Crear Docs PF</a>
-            {% endif %}
+            <a class="que_sigue" href="{% url 'nueva_documentacion_caso' pk_caso=casos_epa.pk %}">Crear Docs</a>
           {% endif %}
         </div>
       </div>
     </div>
   {% endfor %}
   {% for casos_cot, documentacion_cot in listas_cot %}
-    <div class="row cotizacion {% if caso_cot.Requiere_revision_admon == True %} attn-req {% endif %}">
+    <div class="row cotizacion {% if casos_cot.Requiere_revision_admon == True %} attn-req {% endif %}">
       <div class="row info-caso">
         <div class="col-sm-9">
           <h4 class="h4_ctrl_panel_vendedor">{{ casos_cot }}</h4>
@@ -127,29 +159,25 @@
           <div class="col-sm-3 col-sm-offset-1">
             {% if documentacion_cot %}
               {% if casos_cot.Cliente.Persona_Moral == True %}
-                <a class="que_sigue" href="{% url 'actualizar_documentacion_caso' pk=documentacion_cot.pk %}">Editar Docs</a>
+                <a class="que_sigue" href="{% url 'actualizar_documentacion_caso' pk=documentacion_cot.pk tipo='M' %}">Editar Docs</a>
               {% else %}
-                <a class="que_sigue" href="">Editar Docs PF</a>
+                <a class="que_sigue" href="{% url 'actualizar_documentacion_caso' pk=documentacion_cot.pk tipo='F' %}">Editar Docs PF</a>
               {% endif %}
             {% else %}
-              {% if casos_cot.Cliente.Persona_Moral == True %}
-                <a class="que_sigue" href="{% url 'nueva_documentacion_caso' pk_caso=casos_cot.pk %}">Crear Docs</a>
-              {% else %}
-                <a class="que_sigue" href="">Crear Docs PF</a>
-              {% endif %}
+              <a class="que_sigue" href="{% url 'nueva_documentacion_caso' pk_caso=casos_cot.pk %}">Crear Docs</a>
             {% endif %}
           </div>
         </div>
     </div>
   {% endfor %}
   {% for casos_int, documentacion_int in listas_int %}
-    <div class="row interes {% if caso_int.Requiere_revision_admon == True %} attn-req {% endif %}">
+    <div class="row interes {% if casos_int.Requiere_revision_admon == True %} attn-req {% endif %}">
       <div class="row info-caso">
         <div class="col-sm-9">
           <h4 class="h4_ctrl_panel_vendedor">{{ casos_int }}</h4>
         </div>
         <div class="col-sm-3">
-          </br><a href="">detalle caso</a>
+        </br><a href="{% url 'detalle_caso' pk=casos_int.pk %}">detalle caso</a>
         </div>
       </div>
       <div class="col-sm-12 dp-n opciones-caso">
@@ -159,16 +187,12 @@
         <div class="col-sm-3 col-xs-offset-1">
           {% if documentacion_int %}
             {% if casos_int.Cliente.Persona_Moral == True %}
-              <a class="que_sigue" href="{% url 'actualizar_documentacion_caso' pk=documentacion_int.pk %}">Editar Docs</a>
+              <a class="que_sigue" href="{% url 'actualizar_documentacion_caso' pk=documentacion_int.pk tipo='M' %}">Editar Docs</a>
             {% else %}
-              <a class="que_sigue" href="">Editar Docs PF</a>
+              <a class="que_sigue" href="{% url 'actualizar_documentacion_caso' pk=documentacion_int.pk tipo='F' %}">Editar Docs PF</a>
             {% endif %}
           {% else %}
-            {% if casos_int.Cliente.Persona_Moral == True %}
-              <a class="que_sigue" href="{% url 'nueva_documentacion_caso' pk_caso=casos_int.pk %}">Crear Docs</a>
-            {% else %}
-              <a class="que_sigue" href="">Crear Docs PF</a>
-            {% endif %}
+            <a class="que_sigue" href="{% url 'nueva_documentacion_caso' pk_caso=casos_int.pk %}">Crear Docs</a>
           {% endif %}
         </div>
       </div>

@@ -12,13 +12,28 @@
       </br>
       <h3>Persona Encargada:</h3></br>
       {{ contacto_cform|crispy }}
-      <input type='submit' value='Siguiente'>
-    <p></p></br></br>
     </div>
     <div class="col-sm-6">
       </br>
-      <h3>Detalle de lo requerido:</h3></br>
+      <h3>Origen del Caso:</h3></br>
       {{ caso_form|crispy }}
+      </br></br>
+      <h3>Detalle de lo requerido:</h3></br>
+      {{ Eq_Solicitado_FormSet.management_form }}
+      <div id="form_set">
+        {% for form in Eq_Solicitado_FormSet %}
+          {{ form|crispy }}
+        </br>
+        {% endfor %}
+      </div>
+      </br><input type="button" value="Agregar Otro" id="add_more" class="flt-r">
+      </br><hr/>
+      <input type='submit' value='Siguiente'><p></p></br></br>
+      <div id="empty_form" style="display:none">
+        <table class='eq_tabla'>
+          {{ Eq_Solicitado_FormSet.empty_form|crispy }}
+        </table>
+      </div>
     </div>
 </div>
 {% endblock %}
@@ -27,6 +42,12 @@
 <script>
   $(document).ready(function() {
       $('.dateinput').datepicker({ format: "yyyy/mm/dd" });
+  });
+  $('#add_more').click(function(){
+       var form_idx = $('#id_form-TOTAL_FORMS').val();
+       $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+       $('#form_set').append('</br>');
+       $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
   });
 </script>
 {% endblock %}

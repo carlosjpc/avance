@@ -1,0 +1,73 @@
+{% extends "comercial/base_comercial.html" %}
+{% load comercial_tags %}
+
+{% block AreaTrabajo %}
+
+<div class="row">
+  <div class="col-sm-8 col-sm-offset-2">
+    <div class="row">
+      <div class="col-sm-8">
+        <form method='GET' action=''>
+          <input type='text' name='q' placeholder='Buscador Casos' value='{{ request.GET.q }}'/>
+          <input type='submit' value='Buscar'/>
+        </form>
+      </div>
+      <div class="col-sm-4">
+        <button onclick="displayMenu()">Filtrar por Status</button>
+        <div id="dropdown-menu" class="dp-n">
+          <ul>
+            <li class="l-status-c">
+              <a href="{% url 'lista_casos' etapa='crd' %}">Cerrado</a>
+            </li>
+            <li class="l-status-c">
+              <a href="{% url 'lista_casos' etapa='apr' %}">Aprobado</a>
+            </li>
+            <li class="l-status-c">
+              <a href="{% url 'lista_casos' etapa='eap' %}">EPE</a>
+            </li>
+            <li class="l-status-c">
+              <a href="{% url 'lista_casos' etapa='epa' %}">Xcomp</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    </br></br>
+    {% regroup historial_cs by Fecha.month as m_historial_cs %}
+    {% for hist_m in m_historial_cs %}
+      {% for hist in hist_m.list %}
+        {% if forloop.first %}
+          <p>mes {{ hist.Fecha.month }}</p>
+        {% endif %}
+          <h4><a href="{% url 'detalle_caso' pk=hist.Caso.pk %}">{{ hist.Caso.Cliente.Nombre_Empresa }}</a></h4>
+        {% if forloop.last %}
+          </br>
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if casos.has_previous %}
+                <a href="?page={{ casos.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previa</a>
+            {% endif %}
+
+            <span class="current">
+                Pagina {{ casos.number }} de {{ casos.paginator.num_pages }}.
+            </span>
+
+            {% if casos.has_next %}
+                <a href="?page={{ casos.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">siguiente</a>
+            {% endif %}
+        </span>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+  function displayMenu(){
+    document.getElementById("dropdown-menu").classList.toggle("show");
+  }
+</script>
+{% endblock %}

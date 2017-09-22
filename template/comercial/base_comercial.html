@@ -14,6 +14,13 @@
 {% block Desktop_Menu %}
 <ul>
   <li>
+    <p id="comparativa_op">Comparativas</p>
+    <ul id="comparativas_toggle" class="dp-n">
+      <li><a href="{% url 'comparativa_arr' %}">Arrendamiento</a></li>
+      <li><a href="">Crédito</a></li>
+    </ul>
+  </li>
+  <li>
     <p id="citas_op">Citas</p>
     <img>
     <ul id="citas_toggle" class="dp-n">
@@ -42,7 +49,7 @@
       {% if request.user|has_group:"comercial_vendedor" or request.user|has_group:"comercial_mger" %}
         <li><a href="{% url 'lista_clientes' vendedor_pk='000' status='AL' tipo='S' %}">Nuevo Caso</a></li>
       {% endif %}
-        <li><a href="">Lista Casos</a></li>
+        <li><a href="{% url 'lista_casos' etapa='crd' %}">Lista Casos Cerrados</a></li>
     </ul>
   </li>
   <li>
@@ -53,6 +60,7 @@
         <li><a href="{% url 'nueva_agencia' %}">Nueva Agencia</a></li>
       {% endif %}
       <li><a href="{% url 'lista_agencias' %}">Lista Agencias</a></li>
+      <li><a href="{% url 'lista_vendedores_agencia' %}">Lista Vendedores</a></li>
     </ul>
   </li>
 </ul>
@@ -61,6 +69,9 @@
 {% block BaseJavascript %}
 <script>
 $(document).ready(function(){
+  $("#comparativa_op").click(function(){
+      $("#comparativas_toggle").slideToggle();
+  });
   $("#citas_op").click(function(){
       $("#citas_toggle").slideToggle();
   });

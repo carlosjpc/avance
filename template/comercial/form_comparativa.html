@@ -1,0 +1,13 @@
+{% extends "comercial/base_comercial.html" %}
+{% load crispy_forms_tags %}
+
+{% block AreaTrabajo %}
+<div class="col-sm-7 col-sm-offset-2">
+  <form method='POST' action='' target="_blank">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type='submit' value='Siguiente'>
+  </form>
+<p></p></br></br>
+</div>
+{% endblock %}

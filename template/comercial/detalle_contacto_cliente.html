@@ -1,0 +1,27 @@
+{% extends "comercial/base_comercial.html" %}
+{% load comercial_tags %}
+
+{% block AreaTrabajo %}
+<div class="row">
+  <div class="col-sm-8">
+    <h2><a href="{% url 'detalle_cliente' pk=contacto.Cliente.pk %}">{{ contacto.Cliente.Nombre_Empresa }}</a></h2>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <h4>{{ contacto.Nombre_del_Contacto }}</h4>
+    <h4>{{ contacto.get_Rol_display }}</h4>
+    {% if contacto.Email %}
+      <h4>Email: <a href="mailto:{{ contacto.Email }}" target="_blank">{{ contacto.Email }}</a></h4>
+    {% endif %}
+    {% if contacto.Telefono %}
+      <h4>Telefono: {{ contacto.Telefono }}</h4>
+    {% endif %}
+    {% if contacto.Celular %}
+      <h4>Celular: {{ contacto.Celular }}</h4>
+    {% endif %}
+    </br>
+    <a href="{% url 'editar_contacto' pk=contacto.pk %}">Editar Contacto</a>
+  </div>
+</div>
+{% endblock %}

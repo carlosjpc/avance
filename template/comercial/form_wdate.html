@@ -2,12 +2,12 @@
 {% load crispy_forms_tags %}
 
 {% block AreaTrabajo %}
-<div class="col-sm-6 col-sm-offset-2">
-</br><h3> {{ title }} </h3></br>
+<div class="col-sm-7 col-sm-offset-2">
+  </br><h3> {{ title }} </h3></br>
   <form method='POST' action=''>
     {% csrf_token %}
       {{ form|crispy }}
-      </br><input type='submit' value='Guardar'>
+    </br><input type='submit' value='Siguiente'>
     <p></p></br></br>
   </form>
 </div>

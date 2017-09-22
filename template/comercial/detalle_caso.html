@@ -5,12 +5,25 @@
 {% block AreaTrabajo %}
 <h3 class="txt-c">
   <a href="{% url 'detalle_cliente' pk=caso.Cliente.pk %}">{{ caso.Cliente.Nombre_Empresa }}</a>
-  {{ caso.Descripcion }}
-</h3>
-{% if comprador %}
-  <p>{{ comprador.Nombre_del_Contacto }} {{ comprador.Celular }} | <a href="mailto:{{comprador.Email}}">{{ comprador.Email }}</a></p>
+</h3></br>
+<div class="row lista-eq">
+  <ul>
+  {% for eq in eqs %}
+    <li>
+      <p class="txt-c">{{ eq.Vehiculo }} | {{ eq.Modelo }} | ${{ eq.Precio|intcomma }} | Plazo: {{ eq.Plazo }}
+        {% if eq.Nota_de_Credito > 0 %}
+          | {{ eq.Nota_de_Credito }}
+        {% endif %}
+        <a href="{% url 'actualizar_eq' pk=eq.pk %}">Editar</a>
+        <a href="{% url 'borrar_eq' pk=eq.pk %}" class="borrar">Borrar</a>
+      </p>
+    </li>
+  {% endfor %}
+  </ul>
   </br>
-{% endif %}
+  <p class="txt-c"><a href="{% url 'agregar_eq' pk=caso.pk %}">Agregar Equipos</a></p>
+</div>
+</br></br>
 <div class="row">
   <div class="col-sm-3 col-sm-offset-1">
     {% if request.user|has_group:"comercial_vendedor" or request.user|has_group:"comercial_mger" %}
@@ -24,7 +37,7 @@
   </div>
   <div class="col-sm-3 col-sm-offset-1">
     {% if request.user|has_group:"comercial_backup" or request.user|has_group:"comercial_mger" %}
-      <p class="txt-c"><a href="{% url 'agregar_anotacion' pk_caso=caso.pk %}">Agregar Interaccion</a></p>
+      <p class="txt-c"><a href="{% url 'agregar_anotacion' pk_caso=caso.pk %}">Agregar Anotación</a></p>
     {% endif %}
   </div>
 </br><hr>

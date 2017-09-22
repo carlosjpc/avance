@@ -1,20 +1,49 @@
 {% extends "comercial/base_comercial.html" %}
-
+{% load comercial_tags %}
 
 {% block AreaTrabajo %}
 
 <div class="row">
-  <div class="col-sm-7 col-sm-offset-2">
+  <div class="col-sm-8 col-sm-offset-2">
     <h2>{{ titulo }}</h2>
-    <form method='GET' action=''>
-      <input type='text' name='q' placeholder='Buscador Clientes' value='{{ request.GET.q }}'/>
-      <input type='submit' value='Buscar'/>
-    </form>
+    <div class="row">
+      <div class="col-sm-8">
+        <form method='GET' action=''>
+          <input type='text' name='q' placeholder='Buscador Clientes' value='{{ request.GET.q }}'/>
+          <input type='submit' value='Buscar'/>
+        </form>
+      </div>
+      <div class="col-sm-4">
+        <button onclick="displayMenu()">Filtrar por Status</button>
+        <div id="dropdown-menu" class="dp-n">
+          {% if request.user|has_group:"comercial_vendedor" %}
+          <ul>
+            <li class="l-status-c">
+              <a href="{% url 'lista_clientes' vendedor_pk='000' status='PR' tipo='L' %}">Prospecto</a>
+            </li>
+            <li class="l-status-c">
+              <a href="{% url 'lista_clientes' vendedor_pk='000' status='CA' tipo='L' %}">Cliente Activo</a>
+            </li>
+            <li class="l-status-c">
+              <a href="{% url 'lista_clientes' vendedor_pk='000' status='CP' tipo='L' %}">Cliente Prospecto</a>
+            </li>
+            <li class="l-status-c">
+              <a href="{% url 'lista_clientes' vendedor_pk='000' status='CI' tipo='L' %}">Cliente Inactivo</a>
+            </li>
+            <li class="l-status-c">
+              <a href="{% url 'lista_clientes' vendedor_pk='000' status='PF' tipo='L' %}">Prospecto Fallido</a>
+            </li>
+          </ul>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <h4><a href="{% url 'nuevo_prospecto' %}">Nuevo Cliente</a></h4>
     {% for cliente in clientes %}
       {% if c_link == 'detalle' %}
         <h4><a href="{% url 'detalle_cliente' pk=cliente.pk %}">{{ cliente }}</a></h4>
       {% elif c_link == 'nuevo_caso' %}
-        <h4><a href="{% url 'nuevo_caso' pk_cliente=cliente.pk pk_atiende='000' %}">{{ cliente }}</a></h4>
+        <h4><a href="{% url 'nuevo_caso' pk_cliente=cliente.pk %}">{{ cliente }}</a></h4>
       {% endif %}
     {% endfor %}
     <div class="pagination">
@@ -34,4 +63,12 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+  function displayMenu(){
+    document.getElementById("dropdown-menu").classList.toggle("show");
+  }
+</script>
 {% endblock %}
